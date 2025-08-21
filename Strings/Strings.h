@@ -3,61 +3,148 @@
 
 #include <iostream>
 
-class My_String{
-    private:
-       char *data;
-       int lenght;
-    public:
-       My_String() {data = new char[] {"WELCOME"};for (int i{1};data[i]!='\0';i++){lenght = i + 1;}}
-           ~My_String(){delete [] data;}
-       int get_lenght(){return lenght;}
-       void change_to_upper();
-       void change_to_lower();
-       void display();
-       void reverse();
-       void reverse2();
+class My_String
+{
+private:
+    char *data;
+    int lenght;
+
+public:
+    My_String()
+    {
+        data = new char[]{"WELCOME"};
+        for (int i{1}; data[i] != '\0'; i++)
+        {
+            lenght = i + 1;
+        }
+    }
+    ~My_String() { delete[] data; }
+    int get_lenght() { return lenght; }
+    void change_to_upper();
+    void change_to_lower();
+    void display();
+    void reverse();
+    void reverse2();
+    bool operator==(const My_String &LHS);
+    bool is_palindrome();
+    void Check_Dublicate_Hash_Table();
+    void Check_Duplicate_Bitwise();
 };
 
-void My_String::change_to_lower(){
-    
-    for (int i{0};data[i]!='\0';i++){
-       data[i] = data[i] + 32;
+void My_String::change_to_lower()
+{
+
+    for (int i{0}; data[i] != '\0'; i++)
+    {
+        data[i] = data[i] + 32;
     }
 }
 
-void My_String::change_to_upper(){
-    
-    for (int i{0};data[i]!='\0';i++){
-       data[i] = data[i] - 32;
+void My_String::change_to_upper()
+{
+
+    for (int i{0}; data[i] != '\0'; i++)
+    {
+        data[i] = data[i] - 32;
     }
 }
 
-void My_String::display(){
-    for (int i{0};data[i]!='\0';i++){
-        std::cout<<data[i];
+void My_String::display()
+{
+    for (int i{0}; data[i] != '\0'; i++)
+    {
+        std::cout << data[i];
     }
-    std::cout<<"\n";
+    std::cout << "\n";
 }
-void My_String::reverse(){
+void My_String::reverse()
+{
     char *temp;
     int size_temp = lenght;
     temp = new char[size_temp];
     temp[size_temp] = '\0';
     size_temp--;
-    for (int i{0};data[i]!='\0';i++,size_temp--){
+    for (int i{0}; data[i] != '\0'; i++, size_temp--)
+    {
         temp[size_temp] = data[i];
     }
     data = temp;
     delete[] temp;
 }
 
-void My_String::reverse2(){
-    int i{},j{lenght-1};
+void My_String::reverse2()
+{
+    int i{}, j{lenght - 1};
     char t;
-    for (i = 0;i < j;i++,j--){
-        t=data[j];
-        data[j]=data[i];
-        data[i]=t;
+    for (i = 0; i < j; i++, j--)
+    {
+        t = data[j];
+        data[j] = data[i];
+        data[i] = t;
+    }
+}
+
+bool My_String::operator==(const My_String &LHS)
+{
+    int i, j;
+    for (i = 0, j = 0; data[i] != '\0' && LHS.data[j] != '\0'; i++, j++)
+    {
+        if (data[i] != LHS.data[j])
+        {
+            return false;
+        }
+        return true;
+    }
+}
+bool My_String::is_palindrome()
+{
+    for (int i{}, j{lenght}; i < j; i++, j--)
+    {
+        if (data[i] != data[j])
+        {
+            return false;
+        }
+        return true;
+    }
+}
+void My_String::Check_Dublicate_Hash_Table()
+{
+    int table[25];
+    for (int i{}; i < 51; i++)
+    {
+        table[i] = 0;
+    }
+    for (int i{}; data[i] != '\0'; i++)
+    {
+        table[data[i] - 65]++;
+    }
+    for (int i{}; data[i] != '\0'; i++)
+    {
+        table[data[i] - 72]++;
+    }
+    for (int i{}; table[i] < 51; i++)
+    {
+        if (table[i] > 1)
+        {
+            std::cout << "Letter: " << i + 65 << " is there: " << table[i] << " times.";
+        }
+    }
+}
+void My_String::Check_Duplicate_Bitwise()
+{
+    long int table{0}, x{0};
+    for (int i{}; data != '\0'; i++)
+    {
+        x = 1;
+        x = x << data[i - 97];
+        if ((x & table) > 0)
+        {
+            std::cout << data[i] << " is duplicate!!";
+        }
+        else
+        {
+            table = table || x;
+        }
     }
 }
 #endif
