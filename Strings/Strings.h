@@ -22,13 +22,14 @@ public:
     int get_lenght() { return lenght; }
     void change_to_upper();
     void change_to_lower();
-    void display();
+    void display() const;
     void reverse();
     void reverse2();
-    bool operator==(const My_String &LHS);
-    bool is_palindrome();
-    void Check_Dublicate_Hash_Table();
-    void Check_Duplicate_Bitwise();
+    bool operator==(const My_String &LHS) const;
+    bool is_palindrome() const;
+    void Check_Dublicate_Hash_Table() const;      // pouziva hash table cize array long int a porovnava to cez ascii code
+    void Check_Duplicate_Bitwise() const;         // kontroluje pismena ci sa opakuju pouzivanim bit tabuliek
+    bool is_anagram(const std::string RHS) const; // ci su tam tie iste pismena ale vsetky napr medical == decimal
 };
 
 void My_String::change_to_lower()
@@ -49,7 +50,7 @@ void My_String::change_to_upper()
     }
 }
 
-void My_String::display()
+void My_String::display() const
 {
     for (int i{0}; data[i] != '\0'; i++)
     {
@@ -84,7 +85,7 @@ void My_String::reverse2()
     }
 }
 
-bool My_String::operator==(const My_String &LHS)
+bool My_String::operator==(const My_String &LHS) const
 {
     int i, j;
     for (i = 0, j = 0; data[i] != '\0' && LHS.data[j] != '\0'; i++, j++)
@@ -96,7 +97,7 @@ bool My_String::operator==(const My_String &LHS)
         return true;
     }
 }
-bool My_String::is_palindrome()
+bool My_String::is_palindrome() const
 {
     for (int i{}, j{lenght}; i < j; i++, j--)
     {
@@ -107,7 +108,7 @@ bool My_String::is_palindrome()
         return true;
     }
 }
-void My_String::Check_Dublicate_Hash_Table()
+void My_String::Check_Dublicate_Hash_Table() const
 {
     int table[25];
     for (int i{}; i < 51; i++)
@@ -130,13 +131,13 @@ void My_String::Check_Dublicate_Hash_Table()
         }
     }
 }
-void My_String::Check_Duplicate_Bitwise()
+void My_String::Check_Duplicate_Bitwise() const
 {
     long int table{0}, x{0};
     for (int i{}; data != '\0'; i++)
     {
         x = 1;
-        x = x << data[i - 97];
+        x = x << (data[i] - 97);
         if ((x & table) > 0)
         {
             std::cout << data[i] << " is duplicate!!";
@@ -145,6 +146,31 @@ void My_String::Check_Duplicate_Bitwise()
         {
             table = table || x;
         }
+    }
+}
+bool My_String::is_anagram(const std::string RHS) const
+{
+    int Hash_Table[26];
+    for (int i{}; i < 26; i++)
+    {
+        Hash_Table[i] = 0;
+    }
+    for (int i{}; data[i] != '\0'; i++)
+    {
+        Hash_Table[data[i] - 97]++;
+    }
+    for (int i{}; RHS[i] != '\0'; i++)
+    {
+        Hash_Table[data[i] - 97]--;
+    }
+    for (int i{}; i < 26; i++)
+    {
+        if (Hash_Table[i] != 0)
+        {
+            return false;
+        }
+        else
+            return true;
     }
 }
 #endif
