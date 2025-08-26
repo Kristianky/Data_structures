@@ -30,6 +30,7 @@ public:
     void Check_Dublicate_Hash_Table() const;      // pouziva hash table cize array long int a porovnava to cez ascii code
     void Check_Duplicate_Bitwise() const;         // kontroluje pismena ci sa opakuju pouzivanim bit tabuliek
     bool is_anagram(const std::string RHS) const; // ci su tam tie iste pismena ale vsetky napr medical == decimal
+    void Combinations(int k);
 };
 
 void My_String::change_to_lower()
@@ -94,8 +95,9 @@ bool My_String::operator==(const My_String &LHS) const
         {
             return false;
         }
-        return true;
+        
     }
+    return true;
 }
 bool My_String::is_palindrome() const
 {
@@ -105,8 +107,8 @@ bool My_String::is_palindrome() const
         {
             return false;
         }
-        return true;
     }
+    return true;
 }
 void My_String::Check_Dublicate_Hash_Table() const
 {
@@ -134,7 +136,7 @@ void My_String::Check_Dublicate_Hash_Table() const
 void My_String::Check_Duplicate_Bitwise() const
 {
     long int table{0}, x{0};
-    for (int i{}; data != '\0'; i++)
+    for (int i{}; data[i] != '\0'; i++)
     {
         x = 1;
         x = x << (data[i] - 97);
@@ -169,8 +171,34 @@ bool My_String::is_anagram(const std::string RHS) const
         {
             return false;
         }
-        else
-            return true;
+    }
+     return true;
+}
+void My_String::Combinations(int k){
+    static char *Table;
+    static int *I;
+    int index {};
+    Table = new char[lenght];
+    I = new int [lenght];
+    Table[lenght] = '\0';
+    for (int i{};i < lenght;i++){
+        I[i] = 0;
+    }
+    for (index = 0;data[index] != '\0';index++){
+        if (data[k]=='\0'){
+            Table[k] = '\0';
+            std::cout<<Table[k];
+        }
+        else{
+            for(index = 0;data[index] != '\0';index++){
+                if (I == 0){
+                    Table[k] = data[index];
+                    I[index] = 1;
+                    Combinations(k + index);
+                    I[index] = 0;
+                }
+            }
+        }
     }
 }
 #endif
