@@ -146,8 +146,8 @@ void Matrices<T>::Triangel_Upper_Display(){
 template<class T>
 int Matrices<T>::Triangel_Upper_Get(int x,int y){
     if (x <= y){
-        return Upper_Triangel_Matrix[((x*(x - 1))/2) + y -1];
-    }
+        return Upper_Triangel_Matrix[((y*(y - 1))/2) + x -1];   //opacne ako lower najprv musi ist y os tot je pre collumn mapping
+    }                                                         //pre row je syntax (n*(x-1)-((x-1)*(x-2)/2))+(x-y) taktiez pri Lower bude y namiesto x ale pri lower je toto syntax pre collumn
     else 
     return 0;
 }
