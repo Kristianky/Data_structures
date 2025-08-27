@@ -21,15 +21,16 @@ public:
         Diagonal_Matrix = new T[n];
         Size_Diagonal = n;
     }
-    ~Matrices();
-    void set_diagonal(T x);
+    ~Matrices() {delete[] Diagonal_Matrix;}
+    void set_diagonal();
     int get_single_diagonal(int x, int y);
     void Display_Diagonal();
 };
 
 template <class T>
-void Matrices<T>::set_diagonal(T x)
+void Matrices<T>::set_diagonal()
 {
+    T x;
     for (int i{}; i < Size_Diagonal; i++)
     {
         std::cin >> x;
