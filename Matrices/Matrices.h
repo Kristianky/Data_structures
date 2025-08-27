@@ -23,18 +23,24 @@ private:
     int Size_Diagonal;  // Ale vieme urobit syntax aby sme usetrili pamat tak aby pouzila len klasicku array
     T *Lower_Triangel_Matrix;
     int Lower_Triangel_Size;
+    T *Upper_Triangel_Matrix;
+    int Upper_Triangel_Size;
+    int n;
 public:
     Matrices(int n);
     ~Matrices() {delete[] Diagonal_Matrix;delete[] Lower_Triangel_Matrix;}
     void set_diagonal();
     int get_single_diagonal(int x, int y);
     void Display_Diagonal();
-    void Triangel_Set();
-    int Triangel_Get(int x,int y);
-    void Triangel_Display();
+    void Triangel_Lower_Set();
+    int Triangel_Lower_Get(int x,int y);
+    void Triangel_Lower_Display();
+    void Triangel_Upper_Set();
+    int Triangel_Upper_Get(int x,int y);
+    void Triangel_Upper_Display();
 };
 template<class T>
-Matrices<T>::Matrices(int n){
+Matrices<T>::Matrices(int n):n{n}{
         Diagonal_Matrix = new T[n];
         Size_Diagonal = n;
         Lower_Triangel_Size = 0;
@@ -42,6 +48,10 @@ Matrices<T>::Matrices(int n){
             Lower_Triangel_Size = Lower_Triangel_Size + i;
         }
         Lower_Triangel_Matrix = new T[Lower_Triangel_Size];
+        for (int i{};i < n + 1;i++){
+            Upper_Triangel_Size = Upper_Triangel_Size + i;
+        }
+        Upper_Triangel_Matrix = new T[Upper_Triangel_Size];
     }
 template <class T>
 void Matrices<T>::set_diagonal()
@@ -81,7 +91,7 @@ void Matrices<T>::Display_Diagonal()
     }
 }
 template<class T>
-void Matrices<T>::Triangel_Set(){
+void Matrices<T>::Triangel_Lower_Set(){
     int n = 0;
     for (int i{};i < Lower_Triangel_Size;i++){
         std::cin>>n;
@@ -89,11 +99,12 @@ void Matrices<T>::Triangel_Set(){
     }
 }
 template<class T>
-void Matrices<T>::Triangel_Display(){
-    for(int i{};i < Lower_Triangel_Size;i++){
-        for(int j{};j<Lower_Triangel_Size;j++){
+void Matrices<T>::Triangel_Lower_Display(){
+    int index {};
+    for(int i{};i < n;i++){
+        for(int j{};j<n;j++){
             if (i >= j){
-                std::cout<< Lower_Triangel_Matrix[j];
+                std::cout<< Lower_Triangel_Matrix[index];
             }
             else
                 std::cout<<0;
@@ -102,9 +113,40 @@ void Matrices<T>::Triangel_Display(){
     }
 }
 template<class T>
-int Matrices<T>::Triangel_Get(int x,int y){
+int Matrices<T>::Triangel_Lower_Get(int x,int y){
     if (x >= y){
         return Lower_Triangel_Matrix[((x*(x - 1))/2) + y -1];
+    }
+    else 
+    return 0;
+}
+template<class T>
+void Matrices<T>::Triangel_Upper_Set(){
+    int n = 0;
+    for (int i{};i < Lower_Triangel_Size;i++){
+        std::cin>>n;
+        Upper_Triangel_Matrix[i] = n;
+    }
+}
+template<class T>
+void Matrices<T>::Triangel_Upper_Display(){
+    int index{};
+    for(int i{0};i < n;i++){
+        for(int j{0};j<n;j++){
+            if (i <= j){
+                std::cout<< Upper_Triangel_Matrix[index];
+                index++;
+            }
+            else
+                std::cout<<0;
+        }
+        std::cout<<std::endl;
+    }
+}
+template<class T>
+int Matrices<T>::Triangel_Upper_Get(int x,int y){
+    if (x <= y){
+        return Upper_Triangel_Matrix[((x*(x - 1))/2) + y -1];
     }
     else 
     return 0;
