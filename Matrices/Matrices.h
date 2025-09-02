@@ -20,6 +20,12 @@ Triple alebo Squad diagonal je ako diagonal len ma 3 az viac riadkov:
                           2.  x  x  x  0
                           3.  0  x  x  x
                           4.  0  0  x  x
+                            y 1. 2. 3. 4.
+Toeplitz matrix           x 
+                          1.  1  2  3  4
+                          2.  5  1  2  3
+                          3.  6  5  1  2
+                          4.  8  6  5  1
                             y 1. 2. 3. 4.*/
 
 #include <iostream>
@@ -35,10 +41,12 @@ private:
     int Upper_Triangel_Size;
     T *Triple_Diagonal;
     int Size_Triple_Diagonal;
+    T *Toeplitz_Matrix;
+    int Size_Toeplitz_Matrix;
     int n;
 public:
     Matrices(int n);
-    ~Matrices() {delete[] Diagonal_Matrix;delete[] Lower_Triangel_Matrix;delete [] Triple_Diagonal;}
+    ~Matrices() {delete[] Diagonal_Matrix;delete[] Lower_Triangel_Matrix;delete [] Triple_Diagonal;delete[] Toeplitz_Matrix;}
     void set_diagonal();
     int get_single_diagonal(int x, int y);
     void Display_Diagonal();
@@ -49,8 +57,11 @@ public:
     int Triangel_Upper_Get(int x,int y);
     void Triangel_Upper_Display();
     void Diagonal_Triple_Set();
-    int Diagonal_Triple_GET(int x,int y);
+    void Diagonal_Triple_GET(int x,int y);
     void Diagonal_Triple_Display();
+    void Toeplitz_Set();
+    int Toeplitz_GET();
+    void Toeplitz_Display();
 };
 template<class T>
 Matrices<T>::Matrices(int n):n{n}{
@@ -68,6 +79,8 @@ Matrices<T>::Matrices(int n):n{n}{
         Upper_Triangel_Matrix = new T[Upper_Triangel_Size];
         Size_Triple_Diagonal = 3*n - 2;
         Triple_Diagonal = new T[Size_Triple_Diagonal];
+        Size_Toeplitz_Matrix = n + n - 1;
+        Toeplitz_Matrix = new T[Size_Toeplitz_Matrix];
     }
 template <class T>
 void Matrices<T>::set_diagonal()
@@ -195,7 +208,7 @@ void Matrices<T>::Diagonal_Triple_Display(){
     std::cout<<std::endl;
 }}
 template<class T>
-int Matrices<T>::Diagonal_Triple_GET(int x,int y){
+void Matrices<T>::Diagonal_Triple_GET(int x,int y){
     if (x - y > 1||x - y < -1){
         std::cout<<0;
     }
@@ -210,4 +223,25 @@ int Matrices<T>::Diagonal_Triple_GET(int x,int y){
     }
 }
 
+template<class T>
+void Matrices<T>::Toeplitz_Set(){
+    for (int i{};i < Size_Toeplitz_Matrix;i++){
+        std::cin>>Toeplitz_Matrix[i];
+    }
+}
+
+template<class T>
+void Matrices<T>::Toeplitz_Display(){
+    for (int i{};i < n;i++){
+        for(int j{};j < n;j++){
+            if (i <= j){
+                std::cout<<Toeplitz_Matrix[j - i];
+            }
+            if (i > j){
+                std::cout<<Toeplitz_Matrix[n + i - j - 1];
+            }
+        }
+        std::cout<<std::endl;
+    }
+}
 #endif
