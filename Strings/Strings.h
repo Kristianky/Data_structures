@@ -201,4 +201,7 @@ void My_String::Combinations(int k){
         }
     }
 }
+int My_String::permutaion(){
+    
+}
 #endif
