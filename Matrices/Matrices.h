@@ -60,7 +60,7 @@ public:
     void Diagonal_Triple_GET(int x,int y);
     void Diagonal_Triple_Display();
     void Toeplitz_Set();
-    int Toeplitz_GET();
+    void Toeplitz_GET(int x,int y);
     void Toeplitz_Display();
 };
 template<class T>
@@ -243,5 +243,13 @@ void Matrices<T>::Toeplitz_Display(){
         }
         std::cout<<std::endl;
     }
+}
+template<class T>
+void Matrices<T>::Toeplitz_GET(int x,int y){
+    if (x <= y){
+        std::cout<<Toeplitz_Matrix[y - x];
+    }
+    else 
+       std::cout<<Toeplitz_Matrix[n + y - x - 1];
 }
 #endif
