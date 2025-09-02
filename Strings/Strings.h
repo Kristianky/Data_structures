@@ -31,6 +31,7 @@ public:
     void Check_Duplicate_Bitwise() const;         // kontroluje pismena ci sa opakuju pouzivanim bit tabuliek
     bool is_anagram(const std::string RHS) const; // ci su tam tie iste pismena ale vsetky napr medical == decimal
     void Combinations(int k);
+    int permutation();
 };
 
 void My_String::change_to_lower()
