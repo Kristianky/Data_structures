@@ -31,7 +31,7 @@ public:
     void Check_Duplicate_Bitwise() const;         // kontroluje pismena ci sa opakuju pouzivanim bit tabuliek
     bool is_anagram(const std::string RHS) const; // ci su tam tie iste pismena ale vsetky napr medical == decimal
     void Combinations(int k);
-    int permutation();
+    int permutation(int k);
 };
 
 void My_String::change_to_lower()
@@ -202,7 +202,25 @@ void My_String::Combinations(int k){
         }
     }
 }
-int My_String::permutaion(){
-    
+int My_String::permutation(int k){
+    static int *Number_Of_Pemutation = new int[lenght];
+    static char *Perm_Table;
+    int i{};
+    Perm_Table = new char[lenght];
+    if (data[k]=='\0'){
+        for (int j{};Perm_Table[j]!='\0';j++){
+            std::cout<<Perm_Table[j]<<" ";
+        }
+    }
+    else {
+        for (i=0;data[i]!='\0';i++){
+            if(Number_Of_Pemutation[i]==0){
+                Perm_Table[k]=data[i];
+                Number_Of_Pemutation[i] = 1;
+                permutation(k + 1);
+                Number_Of_Pemutation[i] = 0;    
+            }
+        }
+    }
 }
 #endif
