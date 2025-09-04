@@ -200,7 +200,7 @@ int Matrices<T>::Diagonal_Triple_GET(int x,int y){
         std::cout<<0;
     }
     if (x - y == 1){
-        std::cout<<Triple_Diagonal[x - 1]<<'\n';
+       std::cout<<Triple_Diagonal[x - 1]<<'\n';
     }
     if (x-y==0){
         std::cout<<Triple_Diagonal[n - 1 + x]<<'\n';
