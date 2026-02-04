@@ -3,27 +3,26 @@
 	"tasks": [
 		{
 			"type": "cppbuild",
-			"label": "G++ TCP",
-			"command": "C:\\mingw64\\bin\\g++.exe",
+			"label": "G++ DataStruct",
+			"command": "C:\\msys64\\mingw64\\bin\\g++.exe",
 			"args": [
 				"-fdiagnostics-color=always",
-				"-I",
+				"-IC:\\Users\\krist\\Desktop\\C++\\Data_structures\\include",
+				"-IC:\\Users\\krist\\Desktop\\C++\\Data_structures\\CinkularLinkList",
 				"-g",
-				"${file}",
+				"${fileDirname}\\*.cpp",
 				"-o",
-				"${fileDirname}\\${fileBasenameNoExtension}.exe",
-				"-lws2_32",
-				"-municode",
-				"-mwindows",
+				"${fileDirname}\\${fileBasenameNoExtension}.exe"
 			],
-			"options": {
+
+            "options": {
 				"cwd": "${fileDirname}"
 			},
 			"problemMatcher": [
 				"$gcc"
 			],
 			"group": "build",
-			"detail": "compiler: C:\\mingw64\\bin\\g++.exe"
+			"detail": "compiler: C:\\msys64\\mingw64\\bin\\g++.exe"
 		}
 	]
 }
