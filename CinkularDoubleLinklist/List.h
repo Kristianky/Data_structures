@@ -2,6 +2,7 @@
 #define _LIST_H_
 
 #include <iostream>
+#include <stack>
 
 template <typename T>
 struct Node
@@ -147,4 +148,5 @@ void List<T>::Delete(int Index)
     delete p;
     Len--;
 }
+
 #endif

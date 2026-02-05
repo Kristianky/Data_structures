@@ -412,3 +412,20 @@ void ReverseRecurs(Node *Temp1,Node *Temp2)
        return false;
 
 }*/
+
+std::stack<Node*> LinkedList::Midlle()
+{
+    std::stack<Node*> Stack;
+    Node *p = First;
+    while(p)
+    {
+        Stack.push(p);
+        p = p->Next;
+    }
+    int result = Stack.size() - 1 / 2;
+    for(int i{};i < result;i++)
+    {
+        Stack.pop();
+    }
+    return Stack;
+}

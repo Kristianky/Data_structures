@@ -1,6 +1,8 @@
 #ifndef _LINKED_LIST_H_
 #define _LINKED_LIST_H_
 #include <string>
+#include <stack>
+
 struct Node
 {
     int data;
@@ -37,6 +39,7 @@ class LinkedList
        void RemoveDuplicates();
        void ReverseData();
        void ReverseLinks();
+       std::stack<Node*> Midlle();
       
 };
 
