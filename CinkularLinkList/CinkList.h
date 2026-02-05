@@ -12,13 +12,16 @@ struct Node
 class List
 {
     private:
-       Node *First;
+       Node *Head;
+       int Len;
     public:
-       List(int data){First = new Node;First->data = data;First->Next = First;};
+       List(int data){Head = new Node;Head->data = data;Head->Next = Head;Len = 1;};
        ~List() = default;
        void Display();
        void AddData(int Data);
-      
+       void Insert(int Position,int Data);
+       int Lenght();
+       void Delete(int Index);
 };
 
 #endif
