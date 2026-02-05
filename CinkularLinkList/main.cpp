@@ -12,8 +12,10 @@ int main ()
     list.Delete(1);
     list.Insert(2,8);
     list.Display();
-    std::cout<<list.Lenght();
+    std::cout<<list.Lenght()<<"\n==============================================\n";
 
+    list.AddData(808);
+    list.Display();
     return 0;
     
 }
