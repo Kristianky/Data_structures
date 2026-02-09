@@ -429,3 +429,30 @@ std::stack<Node*> LinkedList::Midlle()
     }
     return Stack;
 }
+
+Node* LinkedList::Finding_Second_Link(const LinkedList &Second )
+{
+    std::stack<Node*> Stack1,Stack2;
+    Node *One = First,*Two = Second.First;
+    while(One)
+    {
+        Stack1.push(One);
+        One = One->Next;
+    }
+    while(Two)
+    {
+        Stack2.push(Two);
+        Two = Two->Next;
+    }
+    while(Stack1.empty()&&Stack2.empty()&&Stack1.top() == Stack2.top())
+    {
+        Stack1.pop();
+        Stack2.pop();
+    }
+    if(Stack1.top() == Stack2.top())
+    {
+        return Stack1.top();
+    }
+    else
+       return nullptr;
+}
