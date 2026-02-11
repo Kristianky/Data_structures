@@ -13,13 +13,14 @@ private:
 public:
     Stack(int size = 0, int top = -1, T *arr = nullptr) : Size{size}, Top{top}, Arr{arr}
     {
-        Arr = new Arr[Size];
+        Arr = new T[Size];
     }
     bool Empty();
     bool Full();
-    T Top();
+    T GetTop();
     T pop();
     void Push(T data);
+    bool ParenthisisMatch(const char *String);
 };
 template <typename T>
 bool Stack<T>::Empty()
@@ -39,25 +40,54 @@ bool Stack<T>::Full()
     {
         return true;
     }
-    else 
+    else
     {
         return false;
     }
 }
-template<typename T>
+template <typename T>
 T Stack<T>::pop()
 {
     T Data = 0;
-    if(Empty)
+    if (Empty())
     {
-        std::cout<<"Stack unedrflow!!\n";
-        return T;
+        std::cout << "Stack unedrflow!!\n";
+        return Data;
     }
-    else 
+    else
     {
         Data = Arr[Top];
         Top--;
         return Data;
     }
+}
+template <typename T>
+void Stack<T>::Push(T Data)
+{
+    if(Full())
+    {
+        std::cout<<"Stack Owerflow";
+    }
+    else
+    {
+        Top++;
+        Arr[Top] = Data;
+    }
+}
+template <typename T>
+bool Stack<T>::ParenthisisMatch(const char *String)
+{
+    for (int i{}; String[i] != '\0'; i++)
+    {
+        if (String[i] == '(' || String[i] == '[' || String[i] == '{')
+        {
+            Push(String[i]);
+        }
+        else if (!Empty() && (Arr[Top] == String[i] - 1 || Arr[Top] == String[i] - 2))
+        {
+            pop();
+        }
+    }
+    return Empty();
 }
 #endif

@@ -40,6 +40,7 @@ class LinkedList
        void ReverseData();
        void ReverseLinks();
        std::stack<Node*> Midlle();
+       Node* Finding_Second_Link(const LinkedList &Second );
       
 };
 

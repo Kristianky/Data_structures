@@ -25,7 +25,7 @@
         }
       ],
 			
-      "preLaunchTask": "G++ TCP"
+      "preLaunchTask": "G++ DataStruct"
     }
   ]
 }
