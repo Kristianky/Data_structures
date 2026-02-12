@@ -2,6 +2,8 @@
 #define _STACK_H_
 
 #include <iostream>
+#include <cstring>
+
 template <typename T>
 class Stack
 {
@@ -21,6 +23,10 @@ public:
     T pop();
     void Push(T data);
     bool ParenthisisMatch(const char *String);
+    int PreOut(char c);
+    int PreIn(char c);
+    char *InfixToPostfix(const char *Test);
+    bool ISOperand(char c);
 };
 template <typename T>
 bool Stack<T>::Empty()
@@ -64,9 +70,9 @@ T Stack<T>::pop()
 template <typename T>
 void Stack<T>::Push(T Data)
 {
-    if(Full())
+    if (Full())
     {
-        std::cout<<"Stack Owerflow";
+        std::cout << "Stack Owerflow";
     }
     else
     {
@@ -89,5 +95,108 @@ bool Stack<T>::ParenthisisMatch(const char *String)
         }
     }
     return Empty();
+}
+
+template <typename T>
+int Stack<T>::PreIn(char c)
+{
+    if (c == '+' || c == '-')
+    {
+        return 2;
+    }
+    if (c == '/' || c == '*')
+    {
+        return 4;
+    }
+    if (c == '^')
+    {
+        return 5;
+    }
+    if (c == '(' || c == '{')
+    {
+        return 0;
+    }
+    if (c == ')' || '}')
+        return 0;
+    else
+        return 0;
+}
+
+template <typename T>
+int Stack<T>::PreOut(char c)
+{
+    if (c == '+' || c == '-')
+    {
+        return 1;
+    }
+    if (c == '/' || c == '*')
+    {
+        return 3;
+    }
+    if (c == '^')
+    {
+        return 6;
+    }
+    if (c == '(' || c == '{')
+    {
+        return 7;
+    }
+    if (c == ')' || c == '}')
+        return 0;
+    else
+        return 0;
+}
+
+template <typename T>
+bool Stack<T>::ISOperand(char c)
+{
+    if (c < 48 || c == 136)
+    {
+        return false;
+    }
+    else
+        return true;
+}
+template <typename T>
+char *Stack<T>::InfixToPostfix(const char *Test)
+{
+    while(Top != -1)
+    {
+        pop();
+    }
+    char *Result;
+    int Size = strlen(Result) + 1;
+    Result = new char[Size];
+    int i{}, j{};
+    while (Test[i] != '\0')
+    {
+        if (ISOperand(Test[i]))
+        {
+            Result[j] = Test[i];
+            i++, j++;
+        }
+        else
+        {
+            if (PreOut(Test[i]) > PreIn(Arr[Top]))
+            {
+                Push(Test[i]);
+                i++;
+            }
+            else
+            {
+                Result[j] = Arr[Top];
+                j++;
+                pop();
+            }
+        }
+    }
+    while (Top != -1)
+    {
+        Result[j] = Arr[Top];
+        j++;
+        pop();
+    }
+    Result[j] = '\0';
+    return Result;
 }
 #endif
