@@ -54,7 +54,7 @@ bool Stack<T>::Full()
 template <typename T>
 T Stack<T>::pop()
 {
-    T Data = 0;
+    T Data = -1;
     if (Empty())
     {
         std::cout << "Stack unedrflow!!\n";
@@ -116,8 +116,6 @@ int Stack<T>::PreIn(char c)
     {
         return 0;
     }
-    if (c == ')' || '}')
-        return 0;
     else
         return 0;
 }
@@ -140,8 +138,9 @@ int Stack<T>::PreOut(char c)
     if (c == '(' || c == '{')
     {
         return 7;
+        
     }
-    if (c == ')' || c == '}')
+    if (c == ')' || '}')
         return 0;
     else
         return 0;
@@ -150,7 +149,7 @@ int Stack<T>::PreOut(char c)
 template <typename T>
 bool Stack<T>::ISOperand(char c)
 {
-    if (c < 48 || c == 136)
+    if (c < 48 || c == 94)
     {
         return false;
     }
@@ -165,7 +164,7 @@ char *Stack<T>::InfixToPostfix(const char *Test)
         pop();
     }
     char *Result;
-    int Size = strlen(Result) + 1;
+    int Size = strlen(Test) + 1;
     Result = new char[Size];
     int i{}, j{};
     while (Test[i] != '\0')
@@ -181,6 +180,12 @@ char *Stack<T>::InfixToPostfix(const char *Test)
             {
                 Push(Test[i]);
                 i++;
+            }
+            else if(PreOut(Test[i]) == PreIn(Arr[Top]))
+            {
+                pop();
+                i++;
+                
             }
             else
             {
