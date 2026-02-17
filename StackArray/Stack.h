@@ -27,6 +27,7 @@ public:
     int PreIn(char c);
     char *InfixToPostfix(const char *Test);
     bool ISOperand(char c);
+    int PostfixToResult(const char *Test);
 };
 template <typename T>
 bool Stack<T>::Empty()
@@ -202,6 +203,50 @@ char *Stack<T>::InfixToPostfix(const char *Test)
         pop();
     }
     Result[j] = '\0';
+    return Result;
+}
+template<typename T>
+int Stack<T>::PostfixToResult(const char *Test)
+{
+    while(Top != -1)
+    {
+        pop();
+    }
+    int i{},X{},Y{},Result{};
+    for(i;Test[i] != '\0';i++)
+    {
+        if(ISOperand(Test[i]))
+        {
+            Push(Test[i]);
+        }
+        else
+        {
+            X = pop() - '0',Y = pop() - '0';
+            switch(Test[i])
+            {
+                case '+':
+                {
+                    Result = X + Y;
+                    break;
+                }
+                case '-':
+                {
+                    Result = X - Y;
+                    break;
+                }
+                case '*':
+                {
+                    Result = X * Y;
+                    break;
+                }
+                case '/':
+                {
+                    Result = X / Y;
+                    break;
+                }
+            }
+        }
+    }
     return Result;
 }
 #endif
