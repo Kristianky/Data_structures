@@ -2,6 +2,7 @@
 #define _TREE_H_
 
 #include "qeue.h"
+#include <iostream>
 
 template <typename T>
 class Tree
@@ -10,6 +11,9 @@ class Tree
     Tree();
     ~Tree();
     void CreateTree();
+    void InOrder(const Node<T> *p);
+    void PostOrder(const Node<T> *p);
+    void PreOrder(const Node<T> *p);
 };
 
 template <typename T>
@@ -49,7 +53,39 @@ void Tree<T>::CreateTree()
             p->Right = t;
             Q.Enqueue(t);
         }
+    }
+}
 
+template <typename T>
+void Tree<T>::InOrder(const Node<T> *p)
+{
+    while (p)
+    {
+        InOrder(p->Left);
+        std::cout << p->Data << ", ";
+        InOrder(p->Right);
+    }
+}
+
+template <typename T>
+void Tree<T>::PostOrder(const Node<T> *p)
+{
+    while (p)
+    {
+        InOrder(p->Left);
+        InOrder(p->Right);
+        std::cout << p->Data << ", ";
+    }
+}
+
+template <typename T>
+void Tree<T>::PreOrder(const Node<T> *p)
+{
+    while (p)
+    {
+        std::cout << p->Data << ", ";
+        InOrder(p->Left);
+        InOrder(p->Right);
     }
 }
 #endif
