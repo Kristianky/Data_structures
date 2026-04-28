@@ -22,7 +22,7 @@ void Tree<T>::CreateTree()
 {
     Node<T> *p, *t;
     T x;
-    queue<Node<T>*> Q(100);
+    queue<Node<T> *> Q(100);
 
     std::cout << "Enter root value: ";
     std::cin >> x;
@@ -60,7 +60,7 @@ void Tree<T>::CreateTree()
 template <typename T>
 void Tree<T>::InOrder(const Node<T> *p)
 {
-    while (p)
+    if (p)
     {
         InOrder(p->Left);
         std::cout << p->Data << ", ";
@@ -71,7 +71,7 @@ void Tree<T>::InOrder(const Node<T> *p)
 template <typename T>
 void Tree<T>::PostOrder(const Node<T> *p)
 {
-    while (p)
+    if (p)
     {
         InOrder(p->Left);
         InOrder(p->Right);
@@ -82,7 +82,7 @@ void Tree<T>::PostOrder(const Node<T> *p)
 template <typename T>
 void Tree<T>::PreOrder(const Node<T> *p)
 {
-    while (p)
+    if (p)
     {
         std::cout << p->Data << ", ";
         InOrder(p->Left);

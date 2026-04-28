@@ -26,7 +26,7 @@ public:
     {
         Data = new T[Size];
         Front = 0;
-        Rear = 1;
+        Rear = 0;
     }
     ~queue() = default;
     bool IsEmpty()
@@ -67,7 +67,7 @@ void queue<T>::Enqueue(T data)
 template<typename T>
 T queue<T>::Dequeue()
 {
-    T Temp = 0;
+    T Temp{};
     if(IsEmpty())
     {
         std::cout<<"Queue is empty";
@@ -75,9 +75,9 @@ T queue<T>::Dequeue()
     }
     else
     {
-        Data[Front] = 0;
-        Front = (Front + 1)%Size;
         Temp = Data[Front];
+        Front = (Front + 1)%Size;
+        
     }
     return Temp;
 }
