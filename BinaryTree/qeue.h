@@ -19,13 +19,12 @@ class queue
 {
 private:
     int Size, Rear, Front;
-    Node<T> **Data;
+    T *Data;
 
 public:
-    queue(int size = 1, T data = 0) : Size{size}
+    queue(int size = 1) : Size{size}
     {
         Data = new T[Size];
-        Data[0] = data;
         Front = 0;
         Rear = 1;
     }
@@ -60,8 +59,8 @@ void queue<T>::Enqueue(T data)
     }
     else
     {
-        Rear = (Rear + 1)%Size;
         Data[Rear] = data;
+        Rear = (Rear + 1)%Size;
     }
 }
 
@@ -72,7 +71,7 @@ T queue<T>::Dequeue()
     if(IsEmpty())
     {
         std::cout<<"Queue is empty";
-        return Temp;
+        return T{};
     }
     else
     {

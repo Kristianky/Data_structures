@@ -7,9 +7,10 @@
 template <typename T>
 class Tree
 {
+public:
     Node<T> *root;
-    Tree();
-    ~Tree();
+    Tree() {};
+    ~Tree() { delete root; };
     void CreateTree();
     void InOrder(const Node<T> *p);
     void PostOrder(const Node<T> *p);
@@ -21,7 +22,7 @@ void Tree<T>::CreateTree()
 {
     Node<T> *p, *t;
     T x;
-    queue<Node> Q(100);
+    queue<Node<T>*> Q(100);
 
     std::cout << "Enter root value: ";
     std::cin >> x;
@@ -30,7 +31,7 @@ void Tree<T>::CreateTree()
     root->Left = root->Right = nullptr;
     Q.Enqueue(root);
 
-    while (!Q.IsEmpty)
+    while (!Q.IsEmpty())
     {
         p = Q.Dequeue();
         std::cout << "Enter a value of left cild of " << p->Data << ": ";

@@ -8,7 +8,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-IC:/Users/krist/Desktop/C++/Data_structures/include",
-                "-IC:/Users/krist/Desktop/C++/Data_structures/CinkularLinkList",
+                "-IC:/Users/krist/Desktop/C++/Data_structures/BinaryTree",
                 "-g",
                 "${workspaceFolder}/*.cpp",
                 "-o",
