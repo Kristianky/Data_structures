@@ -15,7 +15,8 @@ public:
     void InOrder(const Node<T> *p);
     void PostOrder(const Node<T> *p);
     void PreOrder(const Node<T> *p);
-    void LevelOrder(const Node<T> *p);
+    void LevelOrder(Node<T> *p);
+    int Height(Node<T> *p);
 };
 
 template <typename T>
@@ -91,25 +92,42 @@ void Tree<T>::PreOrder(const Node<T> *p)
     }
 }
 
-template<typename T>
-void Tree<T>::LevelOrder(const Node<T> *p)
+template <typename T>
+void Tree<T>::LevelOrder(Node<T> *p)
 {
-    queue Q(100);
-    Q.Enqueue(p);
+    queue<Node<T> *> Q(100);
+    std::cout<<p->Data<<" , ";
+    Q.Enqueue(p); 
 
-    while(Q.IsEmpty())
+    while (!Q.IsEmpty())
     {
         p = Q.Dequeue();
-        if(p->Left)
+        if (p->Left)
         {
-            std::cout<<p->Left->Data;
+            std::cout << p->Left->Data<<" , ";
             Q.Enqueue(p->Left);
         }
-        if(p->Right)
+        if (p->Right)
         {
-            std::cout<<p->Right->Data;
+            std::cout << p->Right->Data<<" , ";
             Q.Enqueue(p->Right);
         }
     }
+}
+
+template <typename T>
+int Tree<T>::Height(Node<T> *p)
+{
+    int x{}, y{};
+    if (p == 0)
+    {
+        return 0;
+    }
+    x = Height(p->Left);
+    y = Height(p->Right);
+    if (x > y)
+        return x + 1;
+    else
+        return y + 1;
 }
 #endif
