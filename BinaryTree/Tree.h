@@ -15,6 +15,7 @@ public:
     void InOrder(const Node<T> *p);
     void PostOrder(const Node<T> *p);
     void PreOrder(const Node<T> *p);
+    void LevelOrder(const Node<T> *p);
 };
 
 template <typename T>
@@ -87,6 +88,28 @@ void Tree<T>::PreOrder(const Node<T> *p)
         std::cout << p->Data << ", ";
         InOrder(p->Left);
         InOrder(p->Right);
+    }
+}
+
+template<typename T>
+void Tree<T>::LevelOrder(const Node<T> *p)
+{
+    queue Q(100);
+    Q.Enqueue(p);
+
+    while(Q.IsEmpty())
+    {
+        p = Q.Dequeue();
+        if(p->Left)
+        {
+            std::cout<<p->Left->Data;
+            Q.Enqueue(p->Left);
+        }
+        if(p->Right)
+        {
+            std::cout<<p->Right->Data;
+            Q.Enqueue(p->Right);
+        }
     }
 }
 #endif
