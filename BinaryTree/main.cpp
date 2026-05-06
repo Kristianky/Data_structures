@@ -10,8 +10,8 @@ int main()
     std::cout<<std::endl;
     std::cout<<BinaryTree.Height(BinaryTree.root);
     std::cout<<std::endl;
-    BinaryTree.PreOrderItterative();
-    std::cout<<std::endl;
+    // BinaryTree.PreOrderItterative();
+    // std::cout<<std::endl;
     BinaryTree.InOrderItterative();
     return 0;
 }
