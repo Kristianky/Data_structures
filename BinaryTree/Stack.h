@@ -4,10 +4,10 @@
 #include<iostream>
 
 template <typename T>
-class Node
+class node
 {
 public:
-    Node *Next;
+    node *Next;
     T Data;
 };
 
@@ -22,21 +22,14 @@ template <typename T>
 class Stack
 {
 private:
-    Node<T> *First;
+    node<T> *First;
     int Size;
     int Top;
     friend std::ostream &operator<< <>(std::ostream &os,const Stack<T> &Rhs);
 
 public:
-    Stack(int Size = 1) {Stack::Size = Size;}
-    Stack(T Data = 0, int Size = 1)
-    {
-        First = new Node<T>;
-        First->Data = Data;
-        Stack::Size = Size;
-        Top = 0;
-        First->Next = nullptr;
-    }
+    Stack( int Size) {Stack<T>::Size = Size;Top = -1;}
+   
     ~Stack() = default;
     bool isEmpty()
     {
@@ -69,11 +62,11 @@ void Stack<T>::Push(T Data)
 {
     if(isFull())
     {
-        std::cout<<"Stack Owerflow";
+        std::cout<<"Stack Owerflow! ";
     }
     else
     {
-        Node<T> *p = new Node<T>;
+        node<T> *p = new node<T>;
         p->Data = Data;
         p->Next = First;
         First = p;
@@ -91,7 +84,7 @@ T Stack<T>::Pop()
     }
     else
     {
-        Node<T> *p = First;
+        node<T> *p = First;
         First = First->Next;
         ReturnValue = p->Data;
         delete p;
@@ -102,7 +95,7 @@ T Stack<T>::Pop()
 template<typename T>
 std::ostream &operator<<(std::ostream &os,const Stack<T> &Rhs)
 {
-    Node<T> *p = Rhs.First;
+    node<T> *p = Rhs.First;
     while(p != nullptr)
     {
         os<<p->Data<<", ";

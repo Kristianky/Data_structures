@@ -3,6 +3,7 @@
 
 #include "qeue.h"
 #include <iostream>
+#include "Stack.h"
 
 template <typename T>
 class Tree
@@ -17,6 +18,9 @@ public:
     void PreOrder(const Node<T> *p);
     void LevelOrder(Node<T> *p);
     int Height(Node<T> *p);
+    void PostOrderItterative();
+    void PreOrderItterative();
+    void InOrderItterative();
 };
 
 template <typename T>
@@ -96,20 +100,20 @@ template <typename T>
 void Tree<T>::LevelOrder(Node<T> *p)
 {
     queue<Node<T> *> Q(100);
-    std::cout<<p->Data<<" , ";
-    Q.Enqueue(p); 
+    std::cout << p->Data << " , ";
+    Q.Enqueue(p);
 
     while (!Q.IsEmpty())
     {
         p = Q.Dequeue();
         if (p->Left)
         {
-            std::cout << p->Left->Data<<" , ";
+            std::cout << p->Left->Data << " , ";
             Q.Enqueue(p->Left);
         }
         if (p->Right)
         {
-            std::cout << p->Right->Data<<" , ";
+            std::cout << p->Right->Data << " , ";
             Q.Enqueue(p->Right);
         }
     }
@@ -129,5 +133,46 @@ int Tree<T>::Height(Node<T> *p)
         return x + 1;
     else
         return y + 1;
+}
+
+template <typename T>
+void Tree<T>::PreOrderItterative()
+{
+    Node<T> *t = root;
+    Stack<Node<T> *> st(20);
+    while (t != nullptr || !st.isEmpty())
+    {
+        if (t != nullptr)
+        {
+            std::cout << t->Data << " ,";
+            st.Push(t);
+            t = t->Left;
+        }
+        else
+        {
+            t = st.Pop();
+            t = t->Right;
+        }
+    }
+}
+template <typename T>
+void Tree<T>::InOrderItterative()
+{
+    Node<T> *t = root;
+    Stack<Node<T> *> st(20);
+    while (t != nullptr || !st.isEmpty())
+    {
+        if (t != nullptr)
+        {
+            st.Push(t);
+            t->Left;
+        }
+        else
+        {
+            t = st.Pop();
+            std::cout << t->Data << ", ";
+            t = t->Right;
+        }
+    }
 }
 #endif
