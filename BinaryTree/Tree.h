@@ -165,7 +165,7 @@ void Tree<T>::InOrderItterative()
         if (t != nullptr)
         {
             st.Push(t);
-            t->Left;
+            t = t->Left;
         }
         else
         {
