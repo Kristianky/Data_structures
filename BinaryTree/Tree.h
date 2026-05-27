@@ -21,6 +21,7 @@ public:
     void PostOrderItterative();
     void PreOrderItterative();
     void InOrderItterative();
+    void LevelOrderIterative();
 };
 
 template <typename T>
@@ -172,6 +173,29 @@ void Tree<T>::InOrderItterative()
             t = st.Pop();
             std::cout << t->Data << ", ";
             t = t->Right;
+        }
+    }
+}
+
+template <typename T>
+void Tree<T>::LevelOrderIterative()
+{
+    Node<T> *t = root;
+    queue<Node<T> *> Q(100);
+    Q.Enqueue(root);
+    std::cout<<t->Data<<" , ";
+    while (!Q.IsEmpty())
+    {
+        t = Q.Dequeue();
+        if(t->Left)
+        {
+            std::cout<<t->Left->Data<<" , ";
+            Q.Enqueue(t->Left);
+        }
+         if(t->Right)
+        {
+            std::cout<<t->Right->Data<<" , ";
+            Q.Enqueue(t->Right);
         }
     }
 }
