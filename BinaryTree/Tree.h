@@ -10,7 +10,7 @@ class Tree
 {
 public:
     Node<T> *root;
-    Tree() {};
+    Tree() {root = nullptr;};
     ~Tree() { delete root; };
     void CreateTree();
     void InOrder(const Node<T> *p);
@@ -22,6 +22,8 @@ public:
     void PreOrderItterative();
     void InOrderItterative();
     void LevelOrderIterative();
+    Node<T>* BinarySearch(T Key); //Must be ordered
+    void AddBTS(T Data);
 };
 
 template <typename T>
@@ -197,6 +199,70 @@ void Tree<T>::LevelOrderIterative()
             std::cout<<t->Right->Data<<" , ";
             Q.Enqueue(t->Right);
         }
+    }
+}
+
+template <typename T>
+Node<T>* Tree<T>::BinarySearch(T Key)
+{
+    Node<T> *t = root;
+    while(t != nullptr)
+    {
+        if(t->Data > Key)
+        {
+            t = t->Left;
+        }
+        else if(t->Data < Key)
+        {
+            t = t->Right;
+        }
+        else
+        {
+            return t;
+        }
+        return nullptr;
+    }
+
+}
+
+template<typename T>
+void Tree<T>::AddBTS(T Data)
+{
+    if(root == nullptr)
+    {
+        root = new Node<T>;
+        root->Data = Data;
+        root->Left=root->Right = nullptr;
+        return;
+    }
+    Node<T> *t = root,*p = nullptr;
+
+    while(t != nullptr)
+    {
+         p = t;
+        if(t->Data > Data)
+        {
+            t = t->Left;
+        }
+        else if(t->Data < Data)
+        {
+            t = t->Right;
+        }
+        else 
+        {
+            return;
+        }
+    }
+    Node<T> *r = new Node<T>;
+    r->Left = r->Right = nullptr;
+    r->Data = Data;
+    if(p->Data > Data)
+    {
+        p->Left = r;
+    }
+    else
+    {
+        p->Right = r;
     }
 }
 #endif

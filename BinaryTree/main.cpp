@@ -15,5 +15,11 @@ int main()
     BinaryTree.InOrderItterative();
     std::cout<<std::endl;
     BinaryTree.LevelOrderIterative();
+    std::cout<<std::endl;
+    Tree<int> BTS;
+    BTS.AddBTS(10);
+    BTS.AddBTS(20);
+    BTS.AddBTS(30);
+    BTS.InOrder(BTS.root);
     return 0;
 }
