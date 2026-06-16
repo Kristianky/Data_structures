@@ -25,6 +25,10 @@ public:
     Node<T>* BinarySearch(T Key); //Must be ordered
     void AddBTS(T Data);
     void CreatePreOrd(T *Data, int Size);
+    Node<T>* DeleteBTS(T Data, Node<T> *p = nullptr);
+    Node<T>* InSucc(Node<T> *p);
+    Node<T>* InPre(Node<T> *p);
+    
 };
 
 template <typename T>
@@ -306,4 +310,74 @@ void Tree<T>::CreatePreOrd(T *Data, int Size)
     }
 
 }
+
+template<typename T>
+Node<T>* Tree<T>::InSucc(Node<T> *p)
+{
+    while(p && p->Left != nullptr)
+    {
+        p = p->Left;
+    }
+    return p;
+}
+
+template<typename T>
+Node<T>* Tree<T>::InPre(Node<T> *p)
+{
+    while(p && p->Right != nullptr)
+    {
+        p = p->Right;
+    }
+    return p;
+}
+
+template<typename T>
+Node<T>* Tree<T>::DeleteBTS(T Data, Node<T> *p = nullptr)
+{
+    if(p == nullptr)
+    {
+        p = root;
+    }
+    else if(p == nullptr)
+    {
+        return nullptr;
+    }
+    if(p->Left == nullptr && p->Right == nullptr)
+    {
+        if(p == root)
+        {
+            delete root;
+            root = nullptr;
+            return nullptr;
+        }
+        delete p;
+        return nullptr;
+    }
+    if (p->Data > Data)
+    {
+        p->Left = DeleteBTS(Data, p->Left);
+    }
+    else if(p->Data < Data)
+    {
+        p->Right = DeleteBTS(Data, p->Right);
+    }
+    else
+    {
+        Node<T> *q;
+        if(Height(p->Left) > Height(p->Right))
+        {
+            q = InPre(p->Left);
+            p->Data = q->Data;
+            p->Left = DeleteBTS(q->Data, p->Left);
+        }
+        else
+        {
+            q = InSucc(p->Right);
+            p->Data = q->Data;
+            p->Right = DeleteBTS(q->Data, p->Right);
+        }
+    }
+    
+}
+
 #endif
