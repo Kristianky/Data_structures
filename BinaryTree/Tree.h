@@ -24,6 +24,7 @@ public:
     void LevelOrderIterative();
     Node<T>* BinarySearch(T Key); //Must be ordered
     void AddBTS(T Data);
+    void CreatePreOrd(T *Data, int Size);
 };
 
 template <typename T>
@@ -264,5 +265,45 @@ void Tree<T>::AddBTS(T Data)
     {
         p->Right = r;
     }
+}
+
+template<typename T>
+void Tree<T>::CreatePreOrd(T *Data, int Size)
+{
+    int i = 0;
+    root = new Node<T>;
+    root->Data = Data[i];
+    i++;
+    root->Left = root->Right = nullptr;
+    Node<T> *p = root,*t = nullptr;
+    while(i < Size)
+    {
+        if(Data[i] < p->Data)
+        {
+            t = new Node<T>;
+            t->Data = Data[i];
+            t->Left = t->Right = nullptr;
+            p->Left = t;
+            p = t;
+            i++;
+        }
+        else
+        {
+            if(Data[i] > p->Data && Data[i] < root->Data)
+            {
+                t = new Node<T>;
+                t->Data = Data[i];
+                t->Left = t->Right = nullptr;
+                p->Right = t;
+                p = t;
+                i++;
+            }
+            else
+            {
+                p = root;
+            }
+        }
+    }
+
 }
 #endif
