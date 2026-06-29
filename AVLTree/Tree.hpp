@@ -23,20 +23,23 @@ public:
 template <typename T>
 Node<T> *Tree<T>::Insert(T Data, Node<T> *t)
 {
-    if (root == nullptr)
-    {
-        root = new Node<T>;
-        root->Data = Data;
-        root->Left = root->Right = nullptr;
-        root->Height = 1;
-        return root;
-    }
     Node<T> *p = nullptr;
-    t = root;
+    if (t == nullptr)
+    {
+        p = new Node<T>;
+        p->Data = Data;
+        p->Left = p->Right = nullptr;
+        p->Height = 1;
+        if(root == nullptr)
+        {
+            root = p;
+        }
+        return p;
+    }
 
-    if (t->Data < Data)
+    if (t->Data > Data)
         t->Left = Insert(Data, t->Left);
-    else
+    else if(t->Data < Data)
         t->Right = Insert(Data, t->Right);
 
     t->Height = Height(t);
@@ -92,7 +95,7 @@ Node<T>* Tree<T>::LLRotation(Node<T> *p)
     p->Height = Height(p);
     PL->Height = Height(PL);
 
-    if(PL == root)
+    if(p == root)
     {
         root = PL;
     }
