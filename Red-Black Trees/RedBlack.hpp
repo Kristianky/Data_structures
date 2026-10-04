@@ -1,6 +1,7 @@
 #pragma once
 
 #include "qeue.h"
+#include "Stack.h"
 #include <cstdint>
 enum
 {
@@ -29,6 +30,7 @@ public:
 
     void FixUp(Node<T> *p);
     void ReColor(Node<T> *GrandParent, Node<T> *Parent, Node<T> *Uncle);
+    void PrintPreOrder();
 
 private:
     void RotateLeft(Node<T> *p);
@@ -270,7 +272,7 @@ T Tree<T>::Delete(T Data, Node<T> *p)
         return 0;
     }
     T ReturnValue;
-    uint16_t Color;
+    uint16_t LastColor;
     while (p != nullptr && p->Data != Data)
     {
         if (p->Data > Data)
@@ -286,42 +288,60 @@ T Tree<T>::Delete(T Data, Node<T> *p)
     {
         return 0;
     }
-    if (p->Left && p->Right)
+    Node<T> *ToDelete = p, *ToDeleteParent = nullptr, *ToDeleteChild = nullptr;
+    ReturnValue = p->Data;
+    if (ToDelete->Left && ToDelete->Right)
     {
-        Node<T> *Successor = InSuccessor(p), *SuccessorParent, *SuccessorRight;
-        SuccessorRight = Successor->Right;
-        SuccessorParent = Successor->Parent;
-        p->Data = Successor->Data;
-        if (Successor == SuccessorParent->Left)
+        ToDelete = InSuccessor(ToDelete);
+        p->Data = ToDelete->Data;
+    }
+    if (ToDelete->Left)
+        ToDeleteChild = ToDelete->Left;
+    else if (ToDelete->Right)
+        ToDeleteChild = ToDelete->Right;
+    LastColor = ToDelete->RedBlack;
+    ToDeleteParent = ToDelete->Parent;
+    if (ToDelete->RedBlack == Red)
+    {
+        if (ToDeleteParent->Left == ToDelete)
         {
-            SuccessorParent->Left = SuccessorRight;
-            Successor->Right->Parent = Successor->Parent;
-            ReturnValue = Successor->Data;
-            Color = Successor->RedBlack;
-            delete Successor;
+            ToDeleteParent->Left = ToDeleteChild;
         }
         else
         {
-            SuccessorParent->Right = SuccessorRight;
-            SuccessorRight->Parent = SuccessorParent;
-            ReturnValue = Successor->Data;
-            Color = Successor->RedBlack;
-            if (Color == Black)
-            {
-                if (SuccessorRight->RedBlack == Red)
-                {
-                    SuccessorRight->RedBlack = Black;
-                }
-                else if (SuccessorRight == nullptr || SuccessorRight->RedBlack == Black)
-                {
-                    if (Successor->Right)
-                        FixUp(Successor->Right);
-                    else
-                        FixUp(Successor->Parent);
-                }
-            }
-            delete Successor;
+            ToDeleteParent->Right = ToDeleteChild;
         }
     }
-return ReturnValue;
+    else
+    {
+        if (ToDelete->Data < ToDeleteParent->Data)
+            ToDeleteParent->Left = ToDeleteChild;
+        else
+            ToDeleteParent->Right = ToDeleteChild;
+        FixUp(ToDeleteChild);
+    }
+
+    delete ToDelete;
+    return ReturnValue;
+}
+
+template <typename T>
+void Tree<T>::PrintPreOrder()
+{
+    Stack<Node<T> *> ST(20);
+    Node<T> *p = root;
+    while (p != nullptr || !ST.isEmpty())
+    {
+        if (p != nullptr)
+        {
+            std::cout << p->Data << ", ";
+            ST.Push(p);
+            p = p->Left;
+        }
+        else
+        {
+            p = ST.Pop();
+            p = p->Right;
+        }
+    }
 }
