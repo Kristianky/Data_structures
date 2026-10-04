@@ -1,7 +1,7 @@
 #pragma once
 
 #include "qeue.h"
-
+#include <cstdint>
 enum
 {
     Red,
