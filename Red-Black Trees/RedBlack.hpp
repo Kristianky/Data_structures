@@ -27,6 +27,7 @@ public:
     Node<T> *InSuccessor(Node<T> *p);
     Node<T> *InPedeccessor(Node<T> *p);
 
+    void FixUp(Node<T> *p);
     void ReColor(Node<T> *GrandParent, Node<T> *Parent, Node<T> *Uncle);
 
 private:
@@ -35,44 +36,8 @@ private:
 };
 
 template <typename T>
-int Tree<T>::Insert(T Data, Node<T> * /*t*/)
+void Tree<T>::FixUp(Node<T> *p)
 {
-    Node<T> *parent = nullptr;
-    Node<T> *current = root;
-
-    // Find the insertion point.
-    while (current != nullptr)
-    {
-        parent = current;
-        if (Data < current->Data)
-            current = current->Left;
-        else if (Data > current->Data)
-            current = current->Right;
-        else
-            return -1; // duplicate
-    }
-
-    Node<T> *inserted = new Node<T>;
-    inserted->Data = Data;
-    inserted->Left = nullptr;
-    inserted->Right = nullptr;
-    inserted->Parent = parent;
-    inserted->RedBlack = Red;
-    inserted->Height = 1;
-
-    if (parent == nullptr)
-    {
-        root = inserted;
-        root->RedBlack = Black;
-        return 1;
-    }
-
-    if (Data < parent->Data)
-        parent->Left = inserted;
-    else
-        parent->Right = inserted;
-
-    Node<T> *p = inserted;
     while (p != root && p->Parent->RedBlack == Red)
     {
         Node<T> *parentNode = p->Parent;
@@ -134,7 +99,46 @@ int Tree<T>::Insert(T Data, Node<T> * /*t*/)
             }
         }
     }
+}
 
+template <typename T>
+int Tree<T>::Insert(T Data, Node<T> * /*t*/)
+{
+    Node<T> *parent = nullptr;
+    Node<T> *current = root;
+
+    // Find the insertion point.
+    while (current != nullptr)
+    {
+        parent = current;
+        if (Data < current->Data)
+            current = current->Left;
+        else if (Data > current->Data)
+            current = current->Right;
+        else
+            return -1; // duplicate
+    }
+
+    Node<T> *inserted = new Node<T>;
+    inserted->Data = Data;
+    inserted->Left = nullptr;
+    inserted->Right = nullptr;
+    inserted->Parent = parent;
+    inserted->RedBlack = Red;
+    inserted->Height = 1;
+
+    if (parent == nullptr)
+    {
+        root = inserted;
+        root->RedBlack = Black;
+        return 1;
+    }
+
+    if (Data < parent->Data)
+        parent->Left = inserted;
+    else
+        parent->Right = inserted;
+    FixUp(inserted);
     root->RedBlack = Black;
     root->Parent = nullptr;
     return 1;
@@ -286,25 +290,35 @@ T Tree<T>::Delete(T Data, Node<T> *p)
     {
         Node<T> *Successor = InSuccessor(p);
         p->Data = Successor->Data;
-            if (Successor == Successor->Parent->Left)
+        if (Successor == Successor->Parent->Left)
+        {
+            Successor->Parent->Left = Successor->Right;
+            Successor->Right->Parent = Successor->Parent;
+            ReturnValue = Successor->Data;
+            Color = Successor->RedBlack;
+            delete Successor;
+        }
+        else
+        {
+            Successor->Parent->Right = Successor->Right;
+            Successor->Right->Parent = Successor->Parent;
+            ReturnValue = Successor->Data;
+            Color = Successor->RedBlack;
+            if (Color == Black)
             {
-                Successor->Parent->Left = Successor->Right;
-                Successor->Right->Parent = Successor->Parent;
-                ReturnValue = Successor->Data;
-                Color = Successor->RedBlack;
-                delete Successor;
+                if (Successor->Right->RedBlack == Red)
+                {
+                    Successor->Right->RedBlack = Black;
+                }
+                else if (Successor->Right == nullptr || Successor->Right->RedBlack == Black)
+                {
+                    if(Successor->Right)
+                        FixUp(Successor->Right);
+                    else
+                        FixUp(Successor->Parent);
+                }
             }
-            else
-            {
-                Successor->Parent->Right = Successor->Right;
-                Successor->Right->Parent = Successor->Parent;
-                ReturnValue = Successor->Data;
-                Color = Successor->RedBlack;
-                delete Successor;
-            }
-            if(Color == Black)
-            {
-                
-            }
+            delete Successor;
+        }
     }
 }
