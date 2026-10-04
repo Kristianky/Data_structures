@@ -61,7 +61,7 @@ void Tree<T>::FixUp(Node<T> *p)
             }
             else
             {
-                if (p == parentNode->Right) // LR: turn it into LL
+                if (p == parentNode->Right)
                 {
                     p = parentNode;
                     RotateLeft(p);
@@ -71,7 +71,7 @@ void Tree<T>::FixUp(Node<T> *p)
 
                 parentNode->RedBlack = Black;
                 grandParent->RedBlack = Red;
-                RotateRight(grandParent); // LL
+                RotateRight(grandParent);
             }
         }
         else
@@ -85,7 +85,7 @@ void Tree<T>::FixUp(Node<T> *p)
             }
             else
             {
-                if (p == parentNode->Left) // RL: turn it into RR
+                if (p == parentNode->Left)
                 {
                     p = parentNode;
                     RotateRight(p);
@@ -95,7 +95,7 @@ void Tree<T>::FixUp(Node<T> *p)
 
                 parentNode->RedBlack = Black;
                 grandParent->RedBlack = Red;
-                RotateLeft(grandParent); // RR
+                RotateLeft(grandParent);
             }
         }
     }
@@ -288,11 +288,13 @@ T Tree<T>::Delete(T Data, Node<T> *p)
     }
     if (p->Left && p->Right)
     {
-        Node<T> *Successor = InSuccessor(p);
+        Node<T> *Successor = InSuccessor(p), *SuccessorParent, *SuccessorRight;
+        SuccessorRight = Successor->Right;
+        SuccessorParent = Successor->Parent;
         p->Data = Successor->Data;
-        if (Successor == Successor->Parent->Left)
+        if (Successor == SuccessorParent->Left)
         {
-            Successor->Parent->Left = Successor->Right;
+            SuccessorParent->Left = SuccessorRight;
             Successor->Right->Parent = Successor->Parent;
             ReturnValue = Successor->Data;
             Color = Successor->RedBlack;
@@ -300,19 +302,19 @@ T Tree<T>::Delete(T Data, Node<T> *p)
         }
         else
         {
-            Successor->Parent->Right = Successor->Right;
-            Successor->Right->Parent = Successor->Parent;
+            SuccessorParent->Right = SuccessorRight;
+            SuccessorRight->Parent = SuccessorParent;
             ReturnValue = Successor->Data;
             Color = Successor->RedBlack;
             if (Color == Black)
             {
-                if (Successor->Right->RedBlack == Red)
+                if (SuccessorRight->RedBlack == Red)
                 {
-                    Successor->Right->RedBlack = Black;
+                    SuccessorRight->RedBlack = Black;
                 }
-                else if (Successor->Right == nullptr || Successor->Right->RedBlack == Black)
+                else if (SuccessorRight == nullptr || SuccessorRight->RedBlack == Black)
                 {
-                    if(Successor->Right)
+                    if (Successor->Right)
                         FixUp(Successor->Right);
                     else
                         FixUp(Successor->Parent);
@@ -321,4 +323,5 @@ T Tree<T>::Delete(T Data, Node<T> *p)
             delete Successor;
         }
     }
+return ReturnValue;
 }
