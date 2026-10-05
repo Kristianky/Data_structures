@@ -2,6 +2,7 @@
 #define _QEUE_H_
 
 #include <iostream>
+#include <cstdint>
 // Implementovane je cilkular qeue ulozenu ako array pretoze bez cilkular by sme vzdy museli vyprazdnit
 // array a az potom by sme mohli znova pridavat data takto pojdu rear a front index vzdy v kruhu
 

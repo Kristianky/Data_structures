@@ -2,7 +2,7 @@
 
 #include "qeue.h"
 #include "Stack.h"
-
+#include <iostream>
 template <typename T>
 class Tree
 {
@@ -12,6 +12,7 @@ public:
     int Insert(T Data);
     bool IsDuplicate(T Data);
     bool Split(Node<T> *p);
+    void Display();
 };
 
 template <typename T>
@@ -32,15 +33,15 @@ int Tree<T>::Insert(T Data)
     }
     while (!p->IsLeaf())
     {
-        Node<T>* OldParent = nullptr;
-        Node<T>* Parent = nullptr;
-        if(p->Parent)
+        Node<T> *OldParent = nullptr;
+        Node<T> *Parent = nullptr;
+        if (p->Parent)
             OldParent = p->Parent;
-        if (IsDuplicate)
+        if (IsDuplicate(Data))
             return -1; // We are returning -1 because of duplicate in list
         if (p->IsFull())
             Split(p);
-        if(OldParent == nullptr)
+        if (OldParent == nullptr)
             Parent = root;
         else
             Parent = OldParent;
@@ -52,6 +53,39 @@ int Tree<T>::Insert(T Data)
             p = Parent->Child3;
         else if (Parent->C != MinValue && Data > Parent->C)
             p = Parent->Child4;
+    }
+    return 1;
+}
+
+template <typename T>
+void Tree<T>::Display()
+{
+    Node<T> *p = root;
+    if (!p)
+        return;
+    Stack<Node<T> *> ST(20);
+    T MinValue = static_cast<T>(INT16_MIN);
+    ST.Push(p);
+    while (!ST.isEmpty())
+    {
+        p = ST.Pop();
+        std::cout << "[";
+        if (p->A != MinValue)
+            std::cout << p->A;
+        if (p->B != MinValue)
+            std::cout << p->B;
+        if (p->C != MinValue)
+            std::cout << p->C;
+        std::cout << "]";
+
+        if (p->Child4)
+            ST.Push(p->Child4);
+        if (p->Child3)
+            ST.Push(p->Child3);
+        if (p->Child2)
+            ST.Push(p->Child2);
+        if (p->Child1)
+            ST.Push(p->Child1);
     }
 }
 
@@ -93,7 +127,7 @@ bool Tree<T>::IsDuplicate(T Data)
     return false;
 }
 
-//This function splits the nodes when adding. When split fails it return false
+// This function splits the nodes when adding. When split fails it return false
 template <typename T>
 bool Tree<T>::Split(Node<T> *p)
 {
@@ -101,7 +135,7 @@ bool Tree<T>::Split(Node<T> *p)
     if (p->Parent != nullptr)
         Parent = p->Parent;
     else
-        return false; 
+        return false;
     if (Parent->ValueCount() == 1)
     {
         if (Parent->A < p->B)
@@ -150,7 +184,7 @@ bool Tree<T>::Split(Node<T> *p)
     else
     {
         root = new Node<T>(p->B);
-        root->Child1 = new Node<T>(p->A,p->Child1,p->Child2,nullptr);
+        root->Child1 = new Node<T>(p->A, p->Child1, p->Child2, nullptr);
         root->Child2 = new Node<T>(p->C, p->Child3, p->Child4, nullptr);
         delete p;
     }
