@@ -42,7 +42,7 @@ void Tree<T>::CreateTree()
     std::cin >> x;
     root = new Node<T>;
     root->Data = x;
-    root->Left = root->Right = nullptr;
+    root->Child1 = root->Child4 = nullptr;
     Q.Enqueue(root);
 
     while (!Q.IsEmpty())
@@ -54,8 +54,8 @@ void Tree<T>::CreateTree()
         {
             t = new Node<T>;
             t->Data = x;
-            t->Left = t->Right = nullptr;
-            p->Left = t;
+            t->Child1 = t->Child4 = nullptr;
+            p->Child1 = t;
             Q.Enqueue(t);
         }
         std::cout << "Enter a value of right cild of " << p->Data << ": ";
@@ -64,8 +64,8 @@ void Tree<T>::CreateTree()
         {
             t = new Node<T>;
             t->Data = x;
-            t->Left = t->Right = nullptr;
-            p->Right = t;
+            t->Child1 = t->Child4 = nullptr;
+            p->Child4 = t;
             Q.Enqueue(t);
         }
     }
@@ -76,9 +76,9 @@ void Tree<T>::InOrder(const Node<T> *p)
 {
     if (p)
     {
-        InOrder(p->Left);
+        InOrder(p->Child1);
         std::cout << p->Data << ", ";
-        InOrder(p->Right);
+        InOrder(p->Child4);
     }
 }
 
@@ -87,8 +87,8 @@ void Tree<T>::PostOrder(const Node<T> *p)
 {
     if (p)
     {
-        InOrder(p->Left);
-        InOrder(p->Right);
+        InOrder(p->Child1);
+        InOrder(p->Child4);
         std::cout << p->Data << ", ";
     }
 }
@@ -99,8 +99,8 @@ void Tree<T>::PreOrder(const Node<T> *p)
     if (p)
     {
         std::cout << p->Data << ", ";
-        InOrder(p->Left);
-        InOrder(p->Right);
+        InOrder(p->Child1);
+        InOrder(p->Child4);
     }
 }
 
@@ -114,15 +114,15 @@ void Tree<T>::LevelOrder(Node<T> *p)
     while (!Q.IsEmpty())
     {
         p = Q.Dequeue();
-        if (p->Left)
+        if (p->Child1)
         {
-            std::cout << p->Left->Data << " , ";
-            Q.Enqueue(p->Left);
+            std::cout << p->Child1->Data << " , ";
+            Q.Enqueue(p->Child1);
         }
-        if (p->Right)
+        if (p->Child4)
         {
-            std::cout << p->Right->Data << " , ";
-            Q.Enqueue(p->Right);
+            std::cout << p->Child4->Data << " , ";
+            Q.Enqueue(p->Child4);
         }
     }
 }
@@ -135,8 +135,8 @@ int Tree<T>::Height(Node<T> *p)
     {
         return 0;
     }
-    x = Height(p->Left);
-    y = Height(p->Right);
+    x = Height(p->Child1);
+    y = Height(p->Child4);
     if (x > y)
         return x + 1;
     else
@@ -154,12 +154,12 @@ void Tree<T>::PreOrderItterative()
         {
             std::cout << t->Data << " ,";
             st.Push(t);
-            t = t->Left;
+            t = t->Child1;
         }
         else
         {
             t = st.Pop();
-            t = t->Right;
+            t = t->Child4;
         }
     }
 }
@@ -173,13 +173,13 @@ void Tree<T>::InOrderItterative()
         if (t != nullptr)
         {
             st.Push(t);
-            t = t->Left;
+            t = t->Child1;
         }
         else
         {
             t = st.Pop();
             std::cout << t->Data << ", ";
-            t = t->Right;
+            t = t->Child4;
         }
     }
 }
@@ -194,15 +194,15 @@ void Tree<T>::LevelOrderIterative()
     while (!Q.IsEmpty())
     {
         t = Q.Dequeue();
-        if(t->Left)
+        if(t->Child1)
         {
-            std::cout<<t->Left->Data<<" , ";
-            Q.Enqueue(t->Left);
+            std::cout<<t->Child1->Data<<" , ";
+            Q.Enqueue(t->Child1);
         }
-         if(t->Right)
+         if(t->Child4)
         {
-            std::cout<<t->Right->Data<<" , ";
-            Q.Enqueue(t->Right);
+            std::cout<<t->Child4->Data<<" , ";
+            Q.Enqueue(t->Child4);
         }
     }
 }
@@ -215,11 +215,11 @@ Node<T>* Tree<T>::BinarySearch(T Key)
     {
         if(t->Data > Key)
         {
-            t = t->Left;
+            t = t->Child1;
         }
         else if(t->Data < Key)
         {
-            t = t->Right;
+            t = t->Child4;
         }
         else
         {
@@ -237,7 +237,7 @@ void Tree<T>::AddBTS(T Data)
     {
         root = new Node<T>;
         root->Data = Data;
-        root->Left=root->Right = nullptr;
+        root->Child1=root->Child4 = nullptr;
         return;
     }
     Node<T> *t = root,*p = nullptr;
@@ -247,11 +247,11 @@ void Tree<T>::AddBTS(T Data)
          p = t;
         if(t->Data > Data)
         {
-            t = t->Left;
+            t = t->Child1;
         }
         else if(t->Data < Data)
         {
-            t = t->Right;
+            t = t->Child4;
         }
         else 
         {
@@ -259,15 +259,15 @@ void Tree<T>::AddBTS(T Data)
         }
     }
     Node<T> *r = new Node<T>;
-    r->Left = r->Right = nullptr;
+    r->Child1 = r->Child4 = nullptr;
     r->Data = Data;
     if(p->Data > Data)
     {
-        p->Left = r;
+        p->Child1 = r;
     }
     else
     {
-        p->Right = r;
+        p->Child4 = r;
     }
 }
 
@@ -278,7 +278,7 @@ void Tree<T>::CreatePreOrd(T *Data, int Size)
     root = new Node<T>;
     root->Data = Data[i];
     i++;
-    root->Left = root->Right = nullptr;
+    root->Child1 = root->Child4 = nullptr;
     Node<T> *p = root,*t = nullptr;
     while(i < Size)
     {
@@ -286,8 +286,8 @@ void Tree<T>::CreatePreOrd(T *Data, int Size)
         {
             t = new Node<T>;
             t->Data = Data[i];
-            t->Left = t->Right = nullptr;
-            p->Left = t;
+            t->Child1 = t->Child4 = nullptr;
+            p->Child1 = t;
             p = t;
             i++;
         }
@@ -297,8 +297,8 @@ void Tree<T>::CreatePreOrd(T *Data, int Size)
             {
                 t = new Node<T>;
                 t->Data = Data[i];
-                t->Left = t->Right = nullptr;
-                p->Right = t;
+                t->Child1 = t->Child4 = nullptr;
+                p->Child4 = t;
                 p = t;
                 i++;
             }
@@ -314,9 +314,9 @@ void Tree<T>::CreatePreOrd(T *Data, int Size)
 template<typename T>
 Node<T>* Tree<T>::InSucc(Node<T> *p)
 {
-    while(p && p->Left != nullptr)
+    while(p && p->Child1 != nullptr)
     {
-        p = p->Left;
+        p = p->Child1;
     }
     return p;
 }
@@ -324,9 +324,9 @@ Node<T>* Tree<T>::InSucc(Node<T> *p)
 template<typename T>
 Node<T>* Tree<T>::InPre(Node<T> *p)
 {
-    while(p && p->Right != nullptr)
+    while(p && p->Child4 != nullptr)
     {
-        p = p->Right;
+        p = p->Child4;
     }
     return p;
 }
@@ -342,7 +342,7 @@ Node<T>* Tree<T>::DeleteBTS(T Data, Node<T> *p = nullptr)
     {
         return nullptr;
     }
-    if(p->Left == nullptr && p->Right == nullptr)
+    if(p->Child1 == nullptr && p->Child4 == nullptr)
     {
         if(p == root)
         {
@@ -355,26 +355,26 @@ Node<T>* Tree<T>::DeleteBTS(T Data, Node<T> *p = nullptr)
     }
     if (p->Data > Data)
     {
-        p->Left = DeleteBTS(Data, p->Left);
+        p->Child1 = DeleteBTS(Data, p->Child1);
     }
     else if(p->Data < Data)
     {
-        p->Right = DeleteBTS(Data, p->Right);
+        p->Child4 = DeleteBTS(Data, p->Child4);
     }
     else
     {
         Node<T> *q;
-        if(Height(p->Left) > Height(p->Right))
+        if(Height(p->Child1) > Height(p->Child4))
         {
-            q = InPre(p->Left);
+            q = InPre(p->Child1);
             p->Data = q->Data;
-            p->Left = DeleteBTS(q->Data, p->Left);
+            p->Child1 = DeleteBTS(q->Data, p->Child1);
         }
         else
         {
-            q = InSucc(p->Right);
+            q = InSucc(p->Child4);
             p->Data = q->Data;
-            p->Right = DeleteBTS(q->Data, p->Right);
+            p->Child4 = DeleteBTS(q->Data, p->Child4);
         }
     }
     

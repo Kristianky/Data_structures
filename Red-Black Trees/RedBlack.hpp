@@ -52,9 +52,9 @@ void Tree<T>::FixUp(Node<T> *p)
             break;
         }
 
-        if (parentNode == grandParent->Left)
+        if (parentNode == grandParent->Child1)
         {
-            Node<T> *uncle = grandParent->Right;
+            Node<T> *uncle = grandParent->Child4;
 
             if (uncle != nullptr && uncle->RedBlack == Red)
             {
@@ -63,7 +63,7 @@ void Tree<T>::FixUp(Node<T> *p)
             }
             else
             {
-                if (p == parentNode->Right)
+                if (p == parentNode->Child4)
                 {
                     p = parentNode;
                     RotateLeft(p);
@@ -78,7 +78,7 @@ void Tree<T>::FixUp(Node<T> *p)
         }
         else
         {
-            Node<T> *uncle = grandParent->Left;
+            Node<T> *uncle = grandParent->Child1;
 
             if (uncle != nullptr && uncle->RedBlack == Red)
             {
@@ -87,7 +87,7 @@ void Tree<T>::FixUp(Node<T> *p)
             }
             else
             {
-                if (p == parentNode->Left)
+                if (p == parentNode->Child1)
                 {
                     p = parentNode;
                     RotateRight(p);
@@ -114,17 +114,17 @@ int Tree<T>::Insert(T Data, Node<T> * /*t*/)
     {
         parent = current;
         if (Data < current->Data)
-            current = current->Left;
+            current = current->Child1;
         else if (Data > current->Data)
-            current = current->Right;
+            current = current->Child4;
         else
             return -1; // duplicate
     }
 
     Node<T> *inserted = new Node<T>;
     inserted->Data = Data;
-    inserted->Left = nullptr;
-    inserted->Right = nullptr;
+    inserted->Child1 = nullptr;
+    inserted->Child4 = nullptr;
     inserted->Parent = parent;
     inserted->RedBlack = Red;
     inserted->Height = 1;
@@ -137,9 +137,9 @@ int Tree<T>::Insert(T Data, Node<T> * /*t*/)
     }
 
     if (Data < parent->Data)
-        parent->Left = inserted;
+        parent->Child1 = inserted;
     else
-        parent->Right = inserted;
+        parent->Child4 = inserted;
     FixUp(inserted);
     root->RedBlack = Black;
     root->Parent = nullptr;
@@ -149,21 +149,21 @@ int Tree<T>::Insert(T Data, Node<T> * /*t*/)
 template <typename T>
 void Tree<T>::RotateLeft(Node<T> *p)
 {
-    Node<T> *right = p->Right;
-    Node<T> *middle = right->Left;
+    Node<T> *right = p->Child4;
+    Node<T> *middle = right->Child1;
     Node<T> *oldParent = p->Parent;
 
     right->Parent = oldParent;
     if (oldParent == nullptr)
         root = right;
-    else if (oldParent->Left == p)
-        oldParent->Left = right;
+    else if (oldParent->Child1 == p)
+        oldParent->Child1 = right;
     else
-        oldParent->Right = right;
+        oldParent->Child4 = right;
 
-    right->Left = p;
+    right->Child1 = p;
     p->Parent = right;
-    p->Right = middle;
+    p->Child4 = middle;
     if (middle != nullptr)
         middle->Parent = p;
 }
@@ -171,21 +171,21 @@ void Tree<T>::RotateLeft(Node<T> *p)
 template <typename T>
 void Tree<T>::RotateRight(Node<T> *p)
 {
-    Node<T> *left = p->Left;
-    Node<T> *middle = left->Right;
+    Node<T> *left = p->Child1;
+    Node<T> *middle = left->Child4;
     Node<T> *oldParent = p->Parent;
 
     left->Parent = oldParent;
     if (oldParent == nullptr)
         root = left;
-    else if (oldParent->Left == p)
-        oldParent->Left = left;
+    else if (oldParent->Child1 == p)
+        oldParent->Child1 = left;
     else
-        oldParent->Right = left;
+        oldParent->Child4 = left;
 
-    left->Right = p;
+    left->Child4 = p;
     p->Parent = left;
-    p->Left = middle;
+    p->Child1 = middle;
     if (middle != nullptr)
         middle->Parent = p;
 }
@@ -208,7 +208,7 @@ Node<T> *Tree<T>::RRRotation(Node<T> *p)
 template <typename T>
 Node<T> *Tree<T>::LRRotation(Node<T> *p)
 {
-    RotateLeft(p->Left);
+    RotateLeft(p->Child1);
     RotateRight(p);
     return p->Parent;
 }
@@ -216,7 +216,7 @@ Node<T> *Tree<T>::LRRotation(Node<T> *p)
 template <typename T>
 Node<T> *Tree<T>::RLRotation(Node<T> *p)
 {
-    RotateRight(p->Right);
+    RotateRight(p->Child4);
     RotateLeft(p);
     return p->Parent;
 }
@@ -238,11 +238,11 @@ Node<T> *Tree<T>::InSuccessor(Node<T> *p)
         return nullptr;
     }
     Node<T> *ReturnValue = nullptr;
-    p = p->Right;
+    p = p->Child4;
     while (p != nullptr)
     {
         ReturnValue = p;
-        p = p->Left;
+        p = p->Child1;
     }
     return ReturnValue;
 }
@@ -255,11 +255,11 @@ Node<T> *Tree<T>::InPedeccessor(Node<T> *p)
         return nullptr;
     }
     Node<T> *ReturnValue = nullptr;
-    p = p->Left;
+    p = p->Child1;
     while (p != nullptr)
     {
         ReturnValue = p;
-        p = p->Right;
+        p = p->Child4;
     }
     return ReturnValue;
 }
@@ -277,11 +277,11 @@ T Tree<T>::Delete(T Data, Node<T> *p)
     {
         if (p->Data > Data)
         {
-            p = p->Left;
+            p = p->Child1;
         }
         else
         {
-            p = p->Right;
+            p = p->Child4;
         }
     }
     if (p == nullptr)
@@ -290,34 +290,34 @@ T Tree<T>::Delete(T Data, Node<T> *p)
     }
     Node<T> *ToDelete = p, *ToDeleteParent = nullptr, *ToDeleteChild = nullptr;
     ReturnValue = p->Data;
-    if (ToDelete->Left && ToDelete->Right)
+    if (ToDelete->Child1 && ToDelete->Child4)
     {
         ToDelete = InSuccessor(ToDelete);
         p->Data = ToDelete->Data;
     }
-    if (ToDelete->Left)
-        ToDeleteChild = ToDelete->Left;
-    else if (ToDelete->Right)
-        ToDeleteChild = ToDelete->Right;
+    if (ToDelete->Child1)
+        ToDeleteChild = ToDelete->Child1;
+    else if (ToDelete->Child4)
+        ToDeleteChild = ToDelete->Child4;
     LastColor = ToDelete->RedBlack;
     ToDeleteParent = ToDelete->Parent;
     if (ToDelete->RedBlack == Red)
     {
-        if (ToDeleteParent->Left == ToDelete)
+        if (ToDeleteParent->Child1 == ToDelete)
         {
-            ToDeleteParent->Left = ToDeleteChild;
+            ToDeleteParent->Child1 = ToDeleteChild;
         }
         else
         {
-            ToDeleteParent->Right = ToDeleteChild;
+            ToDeleteParent->Child4 = ToDeleteChild;
         }
     }
     else
     {
         if (ToDelete->Data < ToDeleteParent->Data)
-            ToDeleteParent->Left = ToDeleteChild;
+            ToDeleteParent->Child1 = ToDeleteChild;
         else
-            ToDeleteParent->Right = ToDeleteChild;
+            ToDeleteParent->Child4 = ToDeleteChild;
         FixUp(ToDeleteChild);
     }
 
@@ -336,12 +336,12 @@ void Tree<T>::PrintPreOrder()
         {
             std::cout << p->Data << ", ";
             ST.Push(p);
-            p = p->Left;
+            p = p->Child1;
         }
         else
         {
             p = ST.Pop();
-            p = p->Right;
+            p = p->Child4;
         }
     }
 }

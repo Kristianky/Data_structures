@@ -9,11 +9,11 @@ template<typename T>
 struct Node
 {
     Node<T> *Parent;
-    Node<T> *Left;
+    Node<T> *Child1;
     T Data;
     int Height;
     int RedBlack;
-    Node<T> *Right;
+    Node<T> *Child4;
 
 };
 

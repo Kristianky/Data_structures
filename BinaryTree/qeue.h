@@ -8,9 +8,9 @@
 template<typename T>
 struct Node
 {
-    Node<T> *Left;
+    Node<T> *Child1;
     T Data;
-    Node<T> *Right;
+    Node<T> *Child4;
 
 };
 
