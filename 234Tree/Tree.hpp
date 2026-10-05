@@ -31,6 +31,44 @@ int Tree<T>::Insert(T Data)
         root = p;
         return 1;
     }
+    if (p == root)
+    {
+        if(p->A == MinValue)
+        {
+            p->A = Data;
+        }
+        else if (p->A != MinValue && p->B == MinValue)
+        {
+            if (p->A < Data)
+                p->B = Data;
+            else
+            {
+                p->B = p->A;
+                p->A = Data;
+            }
+        }
+        else if (p->A != MinValue && p->B != MinValue && p->C == MinValue)
+        {
+            if (p->B < Data)
+                p->C = Data;
+            else if (p->A > Data && p->B < Data)
+            {
+                p->C = p->B;
+                p->B = Data;
+            }
+            else if(Data < p->A)
+            {
+                p->C = p->B;
+                p->B = p->A;
+                p->A = Data;
+            }
+        }
+        else
+        {
+            Split(p);
+        }
+
+    }
     while (!p->IsLeaf())
     {
         Node<T> *OldParent = nullptr;
@@ -69,14 +107,14 @@ void Tree<T>::Display()
     while (!ST.isEmpty())
     {
         p = ST.Pop();
-        std::cout << "[";
+        std::cout << "{";
         if (p->A != MinValue)
-            std::cout << p->A;
+            std::cout <<"["<< p->A<<"]";
         if (p->B != MinValue)
-            std::cout << p->B;
+            std::cout <<"[" <<p->B<<"]";
         if (p->C != MinValue)
-            std::cout << p->C;
-        std::cout << "]";
+            std::cout <<"[" << p->C<<"]";
+        std::cout << "}";
 
         if (p->Child4)
             ST.Push(p->Child4);
@@ -134,9 +172,8 @@ bool Tree<T>::Split(Node<T> *p)
     Node<T> *Parent = nullptr;
     if (p->Parent != nullptr)
         Parent = p->Parent;
-    else
-        return false;
-    if (Parent->ValueCount() == 1)
+
+    if (Parent && Parent->ValueCount() == 1)
     {
         if (Parent->A < p->B)
         {
@@ -154,7 +191,7 @@ bool Tree<T>::Split(Node<T> *p)
         }
         delete p;
     }
-    else if (Parent->ValueCount() == 2)
+    else if (Parent && Parent->ValueCount() == 2)
     {
         if (Parent->B < p->B)
         {

@@ -55,12 +55,12 @@ template <typename T>
 uint16_t Node<T>::ValueCount()
 {
     uint16_t ReturnValue = 0;
-    T MinValue = static_cast<T>(INT_MIN);
+    T MinValue = static_cast<T>(INT16_MIN);
     if (MinValue != A)
         ReturnValue = 1;
-    if (MinValue != B)
+    else if (MinValue != B)
         ReturnValue = 2;
-    if (MinValue != C)
+    else if (MinValue != C)
         ReturnValue = 3;
     return ReturnValue;
 }
