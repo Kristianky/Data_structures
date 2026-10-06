@@ -257,24 +257,38 @@ T Tree<T>::Delete(T Data)
         return MinValue;
     else
     {
-        if (p->ValueCount() == 1 && p->IsLeaf())
+        if (p->ValueCount() == 1)
         {
             Node<T> *Parent = p->Parent;
-            Node<T>* NextChild = nullptr;
-            if(Parent->Child1 == p)
+            if (Parent == nullptr)
             {
-                NextChild = Parent->Child2;
-                if(NextChild->IsLeaf() && NextChild->ValueCount() == 2  )
-                {
-                    p->A = Parent->A;
-                    Parent->A = NextChild->A;
-                    NextChild->A = NextChild->B;
-                }
-
             }
-            return Data;
+            Node<T> *NextChild = nullptr;
+            if (Parent->Child1 == p)
+                NextChild = Parent->Child2;
+            else if (Parent->Child2 == p)
+                NextChild = Parent->Child1;
+            if (Parent->ValueCount() == 1)
+            {
+                if (NextChild->ValueCount() == 1)
+                {
+                    if (Parent->Child1 == p)
+                    {
+                        Parent->B = Parent->A;
+                        Parent->A = NextChild->A;
+                    }
+                    else if (Parent->Child2 == p)
+                        Parent->B = NextChild->A;
+                    if (p->IsLeaf() && NextChild->IsLeaf())
+                    {
+                        Parent->Child1 &&Parent->Child2 = nullptr;
+                        delete p;
+                        delete NextChild;
+                    }
+                }
+            }
         }
-        else if (p->ValueCount() == 2 && p->IsLeaf())
+        else if (p->ValueCount() == 2)
         {
             if (p->A == Data)
             {
