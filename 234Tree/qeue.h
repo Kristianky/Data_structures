@@ -28,7 +28,7 @@ public:
     Node(Node<T> *ParentInit = nullptr, Node<T> *LeftInit = nullptr, Node<T> *MidleLeft = nullptr, Node<T> *MidleRight = nullptr, Node<T> *Right = nullptr);
     Node(T Data,Node<T>* Left,Node<T>* Right,Node<T>* Parent);
     Node(T Data)
-    {A = Data;Child1 = Child2 = Child3 = Child4 = Parent = nullptr;B = C = static_cast<T>(INT16_MIN);}
+    {A = Data;Child1 = Child2 = Child3 = Child4 = Parent = nullptr;B = C = static_cast<T>(INT32_MIN);}
 };
 
 template <typename T>
@@ -42,8 +42,8 @@ template<typename T>
 Node<T>::Node(T DataInit,Node<T>* LeftInit,Node<T>* RightInit,Node<T>* ParentInit)
 {
     A = DataInit;
-    B = static_cast<T>(INT16_MIN);
-    C = static_cast<T>(INT16_MIN);
+    B = static_cast<T>(INT32_MIN);
+    C = static_cast<T>(INT32_MIN);
     Child1 = LeftInit;
     Child2 = RightInit;
     Parent = ParentInit;
@@ -55,20 +55,20 @@ template <typename T>
 uint16_t Node<T>::ValueCount()
 {
     uint16_t ReturnValue = 0;
-    T MinValue = static_cast<T>(INT16_MIN);
-    if (MinValue != A)
-        ReturnValue = 1;
+    T MinValue = static_cast<T>(INT32_MIN);
+    if (MinValue != C)
+        ReturnValue = 3;
     else if (MinValue != B)
         ReturnValue = 2;
-    else if (MinValue != C)
-        ReturnValue = 3;
+    else if (MinValue != A)
+        ReturnValue = 1;
     return ReturnValue;
 }
 
 template <typename T>
 bool Node<T>::IsEmpty()
 {
-    T EmptyValue = static_cast<T>(INT16_MIN);
+    T EmptyValue = static_cast<T>(INT32_MIN);
     if (A == EmptyValue && B == EmptyValue && C == EmptyValue)
         return true;
     return false;
@@ -77,7 +77,7 @@ bool Node<T>::IsEmpty()
 template <typename T>
 bool Node<T>::IsFull()
 {
-    T EmptyValue = static_cast<T>(INT16_MIN);
+    T EmptyValue = static_cast<T>(INT32_MIN);
     if (A != EmptyValue && B != EmptyValue && C != EmptyValue)
         return true;
     return false;

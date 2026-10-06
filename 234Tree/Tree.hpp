@@ -11,7 +11,7 @@ public:
     Tree() { root = nullptr; }
     int Insert(T Data);
     bool IsDuplicate(T Data);
-    bool Split(Node<T> *p);
+    Node<T> *Split(Node<T> *p);
     void Display();
 };
 
@@ -19,7 +19,7 @@ template <typename T>
 int Tree<T>::Insert(T Data)
 {
     Node<T> *p = root;
-    T MinValue = static_cast<T>(INT16_MIN);
+    T MinValue = static_cast<T>(INT32_MIN);
     // Creating new tree
     if (p == nullptr)
     {
@@ -31,66 +31,82 @@ int Tree<T>::Insert(T Data)
         root = p;
         return 1;
     }
-    if (p == root)
-    {
-        if(p->A == MinValue)
-        {
-            p->A = Data;
-        }
-        else if (p->A != MinValue && p->B == MinValue)
-        {
-            if (p->A < Data)
-                p->B = Data;
-            else
-            {
-                p->B = p->A;
-                p->A = Data;
-            }
-        }
-        else if (p->A != MinValue && p->B != MinValue && p->C == MinValue)
-        {
-            if (p->B < Data)
-                p->C = Data;
-            else if (p->A > Data && p->B < Data)
-            {
-                p->C = p->B;
-                p->B = Data;
-            }
-            else if(Data < p->A)
-            {
-                p->C = p->B;
-                p->B = p->A;
-                p->A = Data;
-            }
-        }
-        else
-        {
-            Split(p);
-        }
-
-    }
     while (!p->IsLeaf())
     {
-        Node<T> *OldParent = nullptr;
-        Node<T> *Parent = nullptr;
-        if (p->Parent)
-            OldParent = p->Parent;
         if (IsDuplicate(Data))
             return -1; // We are returning -1 because of duplicate in list
         if (p->IsFull())
-            Split(p);
-        if (OldParent == nullptr)
-            Parent = root;
+            p = Split(p);
+        if (p->ValueCount() == 1)
+        {
+            if (p->A > Data)
+                p = p->Child1;
+            else
+                p = p->Child2;
+        }
+        else if (p->ValueCount() == 2)
+        {
+            if (p->A > Data)
+            {
+                p = p->Child1;
+            }
+            else if (p->A < Data && p->B > Data)
+                p = p->Child2;
+            else
+                p = p->Child3;
+        }
         else
-            Parent = OldParent;
-        if (Data < Parent->A)
-            p = p->Child1;
-        else if (Parent->B != MinValue && Data < Parent->B)
-            p = Parent->Child2;
-        else if (Parent->C != MinValue && Data < Parent->C)
-            p = Parent->Child3;
-        else if (Parent->C != MinValue && Data > Parent->C)
-            p = Parent->Child4;
+        {
+            if (p->A > Data)
+            {
+                p = p->Child1;
+            }
+            else if (p->A < Data && p->B > Data)
+                p = p->Child2;
+            else if (p->B < Data && p->C > Data)
+                p = p->Child3;
+            else
+                p = p->Child4;
+        }
+    }
+    if (p->ValueCount() == 1)
+    {
+        if (p->A < Data)
+            p->B = Data;
+        else
+        {
+            p->B = p->A;
+            p->A = Data;
+        }
+    }
+    else if (p->ValueCount() == 2)
+    {
+        if (p->A > Data)
+        {
+            p->C = p->B;
+            p->B = p->A;
+            p->A = Data;
+        }
+        else if (p->A < Data && p->B > Data)
+        {
+            p->C = p->B;
+            p->B = Data;
+        }
+        else
+            p->C = Data;
+    }
+    if (p->ValueCount() == 3)
+    {
+        Node<T> *parent = Split(p);
+
+        if (Data < parent->A)
+            p = parent->Child1;
+        else if (parent->ValueCount() == 1 || Data < parent->B)
+            p = parent->Child2;
+        else if (parent->ValueCount() == 2 || Data < parent->C)
+            p = parent->Child3;
+        else
+            p = parent->Child4;
     }
     return 1;
 }
@@ -102,18 +118,18 @@ void Tree<T>::Display()
     if (!p)
         return;
     Stack<Node<T> *> ST(20);
-    T MinValue = static_cast<T>(INT16_MIN);
+    T MinValue = static_cast<T>(INT32_MIN);
     ST.Push(p);
     while (!ST.isEmpty())
     {
         p = ST.Pop();
         std::cout << "{";
         if (p->A != MinValue)
-            std::cout <<"["<< p->A<<"]";
+            std::cout << "[" << p->A << "]";
         if (p->B != MinValue)
-            std::cout <<"[" <<p->B<<"]";
+            std::cout << "[" << p->B << "]";
         if (p->C != MinValue)
-            std::cout <<"[" << p->C<<"]";
+            std::cout << "[" << p->C << "]";
         std::cout << "}";
 
         if (p->Child4)
@@ -135,7 +151,7 @@ bool Tree<T>::IsDuplicate(T Data)
     Node<T> *p = root;
     if (root == nullptr)
         return false;
-    T MinValue = static_cast<T>(INT16_MIN);
+    T MinValue = static_cast<T>(INT32_MIN);
     while (!p->IsLeaf())
     {
         if (Data == p->A)
@@ -167,7 +183,7 @@ bool Tree<T>::IsDuplicate(T Data)
 
 // This function splits the nodes when adding. When split fails it return false
 template <typename T>
-bool Tree<T>::Split(Node<T> *p)
+Node<T> *Tree<T>::Split(Node<T> *p)
 {
     Node<T> *Parent = nullptr;
     if (p->Parent != nullptr)
@@ -221,9 +237,10 @@ bool Tree<T>::Split(Node<T> *p)
     else
     {
         root = new Node<T>(p->B);
-        root->Child1 = new Node<T>(p->A, p->Child1, p->Child2, nullptr);
-        root->Child2 = new Node<T>(p->C, p->Child3, p->Child4, nullptr);
+        root->Child1 = new Node<T>(p->A, p->Child1, p->Child2, root);
+        root->Child2 = new Node<T>(p->C, p->Child3, p->Child4, root);
+        Parent = root;
         delete p;
     }
-    return true;
+    return Parent;
 }

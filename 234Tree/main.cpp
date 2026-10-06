@@ -7,6 +7,10 @@ int main ()
     tree.Insert(20);
     tree.Insert(40);
     tree.Insert(30);
+    tree.Insert(50);
+    tree.Insert(70);
+    tree.Insert(100);
+    tree.Insert(55);
     tree.Display();
     std::cout<<"\nEnd";
     return 0;
