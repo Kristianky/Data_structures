@@ -266,7 +266,9 @@ T Tree<T>::Delete(T Data)
                 NextChild = Parent->Child2;
                 if(NextChild->IsLeaf() && NextChild->ValueCount() == 2  )
                 {
-                    p->A = NextChild->A;
+                    p->A = Parent->A;
+                    Parent->A = NextChild->A;
+                    NextChild->A = NextChild->B;
                 }
 
             }
