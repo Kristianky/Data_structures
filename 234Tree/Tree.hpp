@@ -10,9 +10,11 @@ public:
     Node<T> *root;
     Tree() { root = nullptr; }
     int Insert(T Data);
+    T Delete(T Data);
     bool IsDuplicate(T Data);
     Node<T> *Split(Node<T> *p);
     void Display();
+    Node<T> *Find(T Data);
 };
 
 template <typename T>
@@ -243,4 +245,69 @@ Node<T> *Tree<T>::Split(Node<T> *p)
         delete p;
     }
     return Parent;
+}
+
+template <typename T>
+T Tree<T>::Delete(T Data)
+{
+    T MinValue = static_cast<T>(INT32_MIN);
+    Node<T> *p = root;
+    p = Find(Data);
+    if (p == nullptr)
+        return MinValue;
+    else
+    {
+        if (p->ValueCount() == 1 && p->IsLeaf())
+        {
+            Node<T> *Parent = p->Parent;
+            Node<T>* NextChild = nullptr;
+            if(Parent->Child1 == p)
+            {
+                NextChild = Parent->Child2;
+                if(NextChild->IsLeaf() && NextChild->ValueCount() == 2  )
+                {
+                    p->A = NextChild->A;
+                }
+
+            }
+            return Data;
+        }
+        else if (p->ValueCount() == 2 && p->IsLeaf())
+        {
+            if (p->A == Data)
+            {
+                p->A = p->B;
+                p->B = MinValue;
+            }
+            if (p->B == Data)
+                p->B = MinValue;
+        }
+    }
+    return Data;
+}
+
+template <typename T>
+Node<T> *Tree<T>::Find(T Data)
+{
+    T MinValue = static_cast<T>(INT32_MIN);
+    Node<T> *p = root;
+    while (!p->IsLeaf())
+    {
+        if (p->A == Data || p->B == Data || p->C == Data)
+            return p;
+        else
+        {
+            if (p->A > Data)
+                p = p->Child1;
+            else if (p->B == MinValue || p->B > Data)
+                p = p->Child2;
+            else if (p->C == MinValue || p->C > Data)
+                p = p->Child3;
+            else
+                p = p->Child4;
+        }
+    }
+    if (p->A == Data || p->B == Data || p->C == Data)
+        return p;
+    return nullptr;
 }
