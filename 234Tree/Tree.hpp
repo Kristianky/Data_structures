@@ -15,6 +15,8 @@ public:
     Node<T> *Split(Node<T> *p);
     void Display();
     Node<T> *Find(T Data);
+    Node<T> *Successor(Node<T> *p, T Data);
+    T LeafDelete(T Data);
 };
 
 template <typename T>
@@ -272,18 +274,46 @@ T Tree<T>::Delete(T Data)
             {
                 if (NextChild->ValueCount() == 1)
                 {
-                    if (Parent->Child1 == p)
+                    if (NextChild->ValueCount() == 1)
                     {
-                        Parent->B = Parent->A;
-                        Parent->A = NextChild->A;
-                    }
-                    else if (Parent->Child2 == p)
-                        Parent->B = NextChild->A;
-                    if (p->IsLeaf() && NextChild->IsLeaf())
-                    {
-                        Parent->Child1 &&Parent->Child2 = nullptr;
-                        delete p;
-                        delete NextChild;
+                        if (NextChild == Parent->Child1)
+                        {
+                            {
+                                NextChild->B = Parent->A;
+                                NextChild->C = p->A;
+                            }
+                            else if (NextChild == Parent->Child2)
+                            {
+                                NextChild->C = NextChild->A;
+                                NextChild->B = Parent->A;
+                                NextChild->A = p->A;
+                            }
+                            if (p->IsLeaf() && NextChild->IsLeaf())
+                            {
+                                delete p;
+                                Parent->Parent = NextChild;
+                                if (NextChild == Parent->Child1)
+                                    NextChild->C = MinValue;
+                                else
+                                {
+                                    NextChild->A = NextChild->B;
+                                    NextChild->B = NextChild->C;
+                                    NextChild->C = MinValue;
+                                }
+                                return Data;
+                            }
+                            else if (p->IsLeaf() && NextChild->IsLeaf())
+                            {
+                                Node<T> *Successor = Successor(p, Data);
+                                p->A = Successor->A;
+                                Parent = Successor->Parent;
+                            }
+
+                            else if (Parent == root)
+                            {
+                                root = Parent;
+                            }
+                        }
                     }
                 }
             }
@@ -326,4 +356,140 @@ Node<T> *Tree<T>::Find(T Data)
     if (p->A == Data || p->B == Data || p->C == Data)
         return p;
     return nullptr;
+}
+
+template <typename T>
+Node<T> *Tree<T>::Successor(Node<T> *p, T Data)
+{
+    if (Data == p->A)
+        p = p->Child2;
+    else if (Data == p->B)
+        p = p->Child3;
+    else if (Data == p->C)
+        p = p->Child4;
+    else
+        p = nullptr;
+    while (!p->IsLeaf())
+    {
+        p = p->Child1;
+    }
+    return p;
+}
+
+template <typename T>
+T Tree<T>::LeafDelete(T Data)
+{
+    T MinValue = static_cast<T>(INT32_MIN);
+    Node<T> *p, *Parent, *NextChild;
+
+    p = Find(Data);
+    Parent = p->Parent;
+    if (Parent == nullptr)
+    {
+    }
+    else
+    {
+        if (Parent->Child1 == p)
+            NextChild = Parent->Child2;
+        else if (Parent->Child2 == p)
+            NextChild = Parent->Child1;
+        else if (Parent->Child3 == p)
+            NextChild = Parent->Child4;
+        else if (Parent->Child4 == p)
+            NextChild = Parent->Child3;
+    }
+    if (p->ValueCount() > 1)
+    {
+        if (Data == p->A)
+        {
+            p->A = p->B;
+            p->B = p->C;
+            p->C = MinValue;
+        }
+        else if (Data = p->B)
+        {
+            p->B = p->C;
+            p->C = MinValue;
+        }
+        else
+        {
+            p->C = MinValue;
+        }
+    }
+    else if (p->ValueCount() == 1)
+    {
+        if (Parent->ValueCount() == 1)
+        {
+            if (NextChild->ValueCount() == 1)
+            {
+                if (NextChild == Parent->Child1)
+                {
+                    if (NextChild == Parent->Child1)
+                    {
+                        NextChild->B = Parent->A;
+                        NextChild->C = p->A;
+                    }
+                    else if (NextChild == Parent->Child2)
+                    {
+                        NextChild->C = NextChild->A;
+                        NextChild->B = Parent->A;
+                        NextChild->A = p->A;
+                    }
+                    if (p->IsLeaf() && NextChild->IsLeaf())
+                    {
+                        delete p;
+                        Parent->Parent = NextChild;
+                        if (NextChild == Parent->Child1)
+                            NextChild->C = MinValue;
+                        else
+                        {
+                            NextChild->A = NextChild->B;
+                            NextChild->B = NextChild->C;
+                            NextChild->C = MinValue;
+                        }
+                        return Data;
+                    }
+                }
+            }
+            else
+            {
+                if (NextChild == Parent->Child1)
+                {
+                    if (NextChild->ValueCount() == 2)
+                    {
+                        p->A = Parent->A;
+                        Parent->A = NextChild->B;
+                        NextChild->B = MinValue;
+                    }
+                    else if (NextChild->ValueCount() == 3)
+                    {
+                        p->A = Parent->A;
+                        PArent->A = NextChild->C;
+                        NextChild->C = MinValue;
+                    }
+                }
+                else if (NextChild == Parent->Child2)
+                {
+                    if (NextChild->ValueCount() == 2)
+                    {
+                        p->A = Parent->A;
+                        Parent->A = NextChild->A;
+                        NextChild->A = NextChild->B;
+                        NextChild->B = MinValue;
+                    }
+                    else if (NextChild->ValueCount() == 3)
+                    {
+                        p->A = Parent->A;
+                        Parent->A = NextChild->A;
+                        NextChild->A = NextChild->B;
+                        NextChild->B = NextChild->C;
+                        NextChild->C = MinValue;
+                    }
+                }
+            }
+        }
+        else if (Parent->ValueCount() == 2)
+        {
+        }
+    }
 }
