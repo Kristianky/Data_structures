@@ -274,46 +274,42 @@ T Tree<T>::Delete(T Data)
             {
                 if (NextChild->ValueCount() == 1)
                 {
-                    if (NextChild->ValueCount() == 1)
-                    {
-                        if (NextChild == Parent->Child1)
-                        {
-                            {
-                                NextChild->B = Parent->A;
-                                NextChild->C = p->A;
-                            }
-                            else if (NextChild == Parent->Child2)
-                            {
-                                NextChild->C = NextChild->A;
-                                NextChild->B = Parent->A;
-                                NextChild->A = p->A;
-                            }
-                            if (p->IsLeaf() && NextChild->IsLeaf())
-                            {
-                                delete p;
-                                Parent->Parent = NextChild;
-                                if (NextChild == Parent->Child1)
-                                    NextChild->C = MinValue;
-                                else
-                                {
-                                    NextChild->A = NextChild->B;
-                                    NextChild->B = NextChild->C;
-                                    NextChild->C = MinValue;
-                                }
-                                return Data;
-                            }
-                            else if (p->IsLeaf() && NextChild->IsLeaf())
-                            {
-                                Node<T> *Successor = Successor(p, Data);
-                                p->A = Successor->A;
-                                Parent = Successor->Parent;
-                            }
+                    if (NextChild == Parent->Child1)
 
-                            else if (Parent == root)
-                            {
-                                root = Parent;
-                            }
+                    {
+                        NextChild->B = Parent->A;
+                        NextChild->C = p->A;
+                    }
+                    else if (NextChild == Parent->Child2)
+                    {
+                        NextChild->C = NextChild->A;
+                        NextChild->B = Parent->A;
+                        NextChild->A = p->A;
+                    }
+                    if (p->IsLeaf() && NextChild->IsLeaf())
+                    {
+                        delete p;
+                        Parent->Parent = NextChild;
+                        if (NextChild == Parent->Child1)
+                            NextChild->C = MinValue;
+                        else
+                        {
+                            NextChild->A = NextChild->B;
+                            NextChild->B = NextChild->C;
+                            NextChild->C = MinValue;
                         }
+                        return Data;
+                    }
+                    else if (p->IsLeaf() && NextChild->IsLeaf())
+                    {
+                        Node<T> *Successor = Successor(p, Data);
+                        p->A = Successor->A;
+                        Parent = Successor->Parent;
+                    }
+
+                    else if (Parent == root)
+                    {
+                        root = Parent;
                     }
                 }
             }
@@ -389,14 +385,34 @@ T Tree<T>::LeafDelete(T Data)
     }
     else
     {
-        if (Parent->Child1 == p)
+        if (p == Parent->Child1)
             NextChild = Parent->Child2;
-        else if (Parent->Child2 == p)
-            NextChild = Parent->Child1;
-        else if (Parent->Child3 == p)
-            NextChild = Parent->Child4;
-        else if (Parent->Child4 == p)
+        else if (p == Parent->Child4)
             NextChild = Parent->Child3;
+        else if (p == Parent->Child2)
+        {
+            if (Parent->ValueCount() = 2)
+            {
+                if (Parent->Child3->ValueCount() > 1)
+                    NextChild = Parent->Child3;
+                else
+                    NextChild = Parent->Child1;
+            }
+            else
+                NextChild = Parent->Child1;
+        }
+        else if (p == Parent->Child3)
+        {
+            if (Parent->ValueCount() == 3)
+            {
+                if (Parent->Child4->ValueCount() > 1)
+                    NextChild = Parent->Child4;
+                else
+                    NextChild = Parent->Child2;
+            }
+            else
+                NextChild = Parent->Child2;
+        }
     }
     if (p->ValueCount() > 1)
     {
@@ -406,7 +422,7 @@ T Tree<T>::LeafDelete(T Data)
             p->B = p->C;
             p->C = MinValue;
         }
-        else if (Data = p->B)
+        else if (Data == p->B)
         {
             p->B = p->C;
             p->C = MinValue;
@@ -424,31 +440,28 @@ T Tree<T>::LeafDelete(T Data)
             {
                 if (NextChild == Parent->Child1)
                 {
+                    NextChild->B = Parent->A;
+                    NextChild->C = p->A;
+                }
+                else if (NextChild == Parent->Child2)
+                {
+                    NextChild->C = NextChild->A;
+                    NextChild->B = Parent->A;
+                    NextChild->A = p->A;
+                }
+                if (p->IsLeaf() && NextChild->IsLeaf())
+                {
+                    delete p;
+                    Parent->Parent = NextChild;
                     if (NextChild == Parent->Child1)
+                        NextChild->C = MinValue;
+                    else
                     {
-                        NextChild->B = Parent->A;
-                        NextChild->C = p->A;
+                        NextChild->A = NextChild->B;
+                        NextChild->B = NextChild->C;
+                        NextChild->C = MinValue;
                     }
-                    else if (NextChild == Parent->Child2)
-                    {
-                        NextChild->C = NextChild->A;
-                        NextChild->B = Parent->A;
-                        NextChild->A = p->A;
-                    }
-                    if (p->IsLeaf() && NextChild->IsLeaf())
-                    {
-                        delete p;
-                        Parent->Parent = NextChild;
-                        if (NextChild == Parent->Child1)
-                            NextChild->C = MinValue;
-                        else
-                        {
-                            NextChild->A = NextChild->B;
-                            NextChild->B = NextChild->C;
-                            NextChild->C = MinValue;
-                        }
-                        return Data;
-                    }
+                    return Data;
                 }
             }
             else
@@ -464,7 +477,7 @@ T Tree<T>::LeafDelete(T Data)
                     else if (NextChild->ValueCount() == 3)
                     {
                         p->A = Parent->A;
-                        PArent->A = NextChild->C;
+                        Parent->A = NextChild->C;
                         NextChild->C = MinValue;
                     }
                 }
