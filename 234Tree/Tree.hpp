@@ -376,133 +376,247 @@ template <typename T>
 T Tree<T>::LeafDelete(T Data)
 {
     T MinValue = static_cast<T>(INT32_MIN);
-    Node<T> *p, *Parent, *NextChild;
+    Node<T> *Node, *Parent, *Sibling;
 
-    p = Find(Data);
-    Parent = p->Parent;
-    if (Parent == nullptr)
+    Node = Find(Data);
+    Parent = Node->Parent;
+    if (Parent == nullptr && Node == root)
     {
     }
     else
     {
-        if (p == Parent->Child1)
-            NextChild = Parent->Child2;
-        else if (p == Parent->Child4)
-            NextChild = Parent->Child3;
-        else if (p == Parent->Child2)
+        if (Node == Parent->Child1)
+            Sibling = Parent->Child2;
+        else if (Node == Parent->Child4)
+            Sibling = Parent->Child3;
+        else if (Node == Parent->Child2)
         {
-            if (Parent->ValueCount() = 2)
+            if (Parent->ValueCount() == 2)
             {
                 if (Parent->Child3->ValueCount() > 1)
-                    NextChild = Parent->Child3;
+                    Sibling = Parent->Child3;
                 else
-                    NextChild = Parent->Child1;
+                    Sibling = Parent->Child1;
             }
             else
-                NextChild = Parent->Child1;
+                Sibling = Parent->Child1;
         }
-        else if (p == Parent->Child3)
+        else if (Node == Parent->Child3)
         {
             if (Parent->ValueCount() == 3)
             {
                 if (Parent->Child4->ValueCount() > 1)
-                    NextChild = Parent->Child4;
+                    Sibling = Parent->Child4;
                 else
-                    NextChild = Parent->Child2;
+                    Sibling = Parent->Child2;
             }
             else
-                NextChild = Parent->Child2;
+                Sibling = Parent->Child2;
         }
+  
     }
-    if (p->ValueCount() > 1)
+    if (Node->ValueCount() > 1)
     {
-        if (Data == p->A)
+        if (Data == Node->A)
         {
-            p->A = p->B;
-            p->B = p->C;
-            p->C = MinValue;
+            Node->A = Node->B;
+            Node->B = Node->C;
+            Node->C = MinValue;
         }
-        else if (Data == p->B)
+        else if (Data == Node->B)
         {
-            p->B = p->C;
-            p->C = MinValue;
+            Node->B = Node->C;
+            Node->C = MinValue;
         }
         else
         {
-            p->C = MinValue;
+            Node->C = MinValue;
         }
+        return Data;
     }
-    else if (p->ValueCount() == 1)
+    if (Parent->ValueCount() == 1)
     {
-        if (Parent->ValueCount() == 1)
+        if (Node->ValueCount() == 1)
         {
-            if (NextChild->ValueCount() == 1)
+            if (Sibling->ValueCount() == 1)
             {
-                if (NextChild == Parent->Child1)
+                if (Sibling == Parent->Child1)
                 {
-                    NextChild->B = Parent->A;
-                    NextChild->C = p->A;
+                    Sibling->B = Parent->A;
+                    Sibling->C = Node->A;
                 }
-                else if (NextChild == Parent->Child2)
+                else if (Sibling == Parent->Child2)
                 {
-                    NextChild->C = NextChild->A;
-                    NextChild->B = Parent->A;
-                    NextChild->A = p->A;
+                    Sibling->B = Sibling->A;
+                    Sibling->A = Parent->A;
+                    Sibling->C = Node->A;
                 }
-                if (p->IsLeaf() && NextChild->IsLeaf())
+                if (Node->IsLeaf() && Sibling->IsLeaf())
                 {
-                    delete p;
-                    Parent->Parent = NextChild;
-                    if (NextChild == Parent->Child1)
-                        NextChild->C = MinValue;
-                    else
+                    delete Node;
+                    if (Sibling == Parent->Child1)
                     {
-                        NextChild->A = NextChild->B;
-                        NextChild->B = NextChild->C;
-                        NextChild->C = MinValue;
+                        Sibling->C = MinValue;
                     }
+                    else if (Sibling == Parent->Child2 &&Node = Sibling->Child1)
+                    {
+                        Sibling->A = Sibling->B;
+                        Sibling->B = Sibling->C;
+                        Sibling->C = MinValue;
+                    }
+                    Parent = Sibling;
+                    delete Parent->Child1;
+                    delete Parent->Child2;
+                    Parent->Child1 = nullptr;
+                    Parent->Child2 = nullptr;
                     return Data;
                 }
             }
             else
             {
-                if (NextChild == Parent->Child1)
+                if (Sibling == Parent->Child1)
                 {
-                    if (NextChild->ValueCount() == 2)
+                    if (Sibling->ValueCount() == 2)
                     {
-                        p->A = Parent->A;
-                        Parent->A = NextChild->B;
-                        NextChild->B = MinValue;
+                        Node->A = Parent->A;
+                        Parent->A = Sibling->B;
+                        Sibling->B = MinValue;
                     }
-                    else if (NextChild->ValueCount() == 3)
+                    else if (Sibling->ValueCount() == 3)
                     {
-                        p->A = Parent->A;
-                        Parent->A = NextChild->C;
-                        NextChild->C = MinValue;
+                        Node->A = Parent->A;
+                        Parent->A = Sibling->C;
+                        Sibling->C = MinValue;
                     }
                 }
-                else if (NextChild == Parent->Child2)
+                else if (Sibling == Parent->Child2)
                 {
-                    if (NextChild->ValueCount() == 2)
+                    if (Sibling->ValueCount() == 2)
                     {
-                        p->A = Parent->A;
-                        Parent->A = NextChild->A;
-                        NextChild->A = NextChild->B;
-                        NextChild->B = MinValue;
+                        Node->A = Parent->A;
+                        Parent->A = Sibling->A;
+                        Sibling->A = Sibling->B;
+                        Sibling->B = MinValue;
                     }
-                    else if (NextChild->ValueCount() == 3)
+                    else if (Sibling->ValueCount() == 3)
                     {
-                        p->A = Parent->A;
-                        Parent->A = NextChild->A;
-                        NextChild->A = NextChild->B;
-                        NextChild->B = NextChild->C;
-                        NextChild->C = MinValue;
+                        Node->A = Parent->A;
+                        Parent->A = Sibling->A;
+                        Sibling->A = Sibling->B;
+                        Sibling->B = Sibling->C;
+                        Sibling->C = MinValue;
                     }
                 }
             }
         }
-        else if (Parent->ValueCount() == 2)
+    }
+    else if (Parent->ValueCount() == 2)
+    {
+        if (Node->ValueCount() == 1)
         {
+            if (Sibling->ValueCount() == 1)
+            {
+                if (Sibling == Parent->Child1)
+                {
+                    Sibling->B = Parent->A;
+                    Sibling->C = Node->A;
+                    Sibling->C = MinValue;
+                    Parent->A = Parent->B;
+                    Parent->B = MinValue;
+                    Parent->Child2 = Parent->Child3;
+                    delete Parent->Child3;
+                        Parent->Child3 = nullptr;
+                    return Data;
+                }
+                else if (Sibling == Parent->Child2)
+                {
+                    Sibling->C = Sibling->A;
+                    Sibling->A = Node->A;
+                    if (Parent->Child1 == Node)
+                    {
+                        Sibling->B = Parent->A;
+                        Sibling->C = Sibling->A;
+                        Sibling->A = Node->A;
+                        Sibling->A = Sibling->B;
+                        Sibling->B = Sibling->C;
+                        Sibling->C = MinValue;
+                        Parent->Child1 = Parent->Child2;
+                        Parent->Child2 = Parent->Child3;
+                        delete Parent->Child3;
+                        Parent->Child3 = nullptr;
+                        return Data;
+                    }
+                    else if (Parent->Child3 == Node)
+                        Sibling->B = Parent->B;
+                    Sibling->C = Node->A;
+                    Sibling->C = MinValue;
+                    delete Node;
+                    Parent->Child3 = nullptr;
+                }
+                else
+                {
+                    Sibling->C = Sibling->A;
+                    Sibling->A = Node->A;
+                    Sibling->B = Parent->B;
+                    Sibling->A = Sibling->B;
+                    Sibling->B = Sibling->C;
+                    Sibling->C = MinValue;
+                    Parent->Child2 = Parent->Child3;
+                    delete Node;
+                    Parent->Child3 = nullptr;
+                }
+            }
+            else
+            {
+                if (Sibling == Node->Child1)
+                {
+                    Node->A = Sibling->B;
+                    if (Sibling->ValueCount() == 2)
+                        Sibling->B = MinValue;
+                    else
+                    {
+                        Sibling->B = Sibling->C;
+                        Sibling->C = MinValue;
+                    }
+                    return Data;
+                }
+                else if (Sibling == Parent->Child2 && Node == Parent->Child1)
+                {
+                    Node->A = Sibling->A;
+                    Sibling->A = Sibling->B;
+                    if (Sibling->ValueCount() == 3)
+                    {
+                        Sibling->B = Sibling->C;
+                        Sibling->C = MinValue;
+                    }
+                    else
+                        Sibling->B = MinValue;
+                }
+                else if (Sibling == Parent->Child2 && Node == Parent->Child3)
+                {
+                    Node->A = Sibling->B;
+                    if (Sibling->ValueCount() == 2)
+                        Sibling->B == MinValue;
+                    else
+                    {
+                        Sibling->B = Sibling->C;
+                        Sibling->C = MinValue;
+                    }
+                }
+                else if (Sibling == Parent->Child3)
+                {
+                    Node->A = Sibling->A;
+                    Sibling->A = Sibling->B;
+                    if(Sibling->ValueCount() == 2)
+                        Sibling->B = MinValue;
+                    else
+                    {
+                        Sibling->B = Sibling->C;
+                        Sibling->C = MinValue;
+                    }
+                }
+            }
         }
     }
+    return Data;
 }
