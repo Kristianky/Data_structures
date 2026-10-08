@@ -16,7 +16,7 @@ public:
     void Display();
     Node<T> *Find(T Data);
     Node<T> *Successor(Node<T> *p, T Data);
-    T LeafDelete(T Data);
+    T LeafDelete(Node<T> *p,T Data);
 };
 
 template <typename T>
@@ -253,77 +253,33 @@ template <typename T>
 T Tree<T>::Delete(T Data)
 {
     T MinValue = static_cast<T>(INT32_MIN);
-    Node<T> *p = root;
-    p = Find(Data);
-    if (p == nullptr)
+    Node<T> *Node = root, *Successor;
+    Node = Find(Data);
+    if (Node == nullptr)
+    {
         return MinValue;
+    }
+    else if (Node->IsLeaf())
+    {
+        LeafDelete(Node,Data);
+        return Data;
+    }
     else
     {
-        if (p->ValueCount() == 1)
+        Successor = Tree<T>::Successor(Node,Data);
+        if (Data == Node->A)
         {
-            Node<T> *Parent = p->Parent;
-            if (Parent == nullptr)
-            {
-            }
-            Node<T> *NextChild = nullptr;
-            if (Parent->Child1 == p)
-                NextChild = Parent->Child2;
-            else if (Parent->Child2 == p)
-                NextChild = Parent->Child1;
-            if (Parent->ValueCount() == 1)
-            {
-                if (NextChild->ValueCount() == 1)
-                {
-                    if (NextChild == Parent->Child1)
-
-                    {
-                        NextChild->B = Parent->A;
-                        NextChild->C = p->A;
-                    }
-                    else if (NextChild == Parent->Child2)
-                    {
-                        NextChild->C = NextChild->A;
-                        NextChild->B = Parent->A;
-                        NextChild->A = p->A;
-                    }
-                    if (p->IsLeaf() && NextChild->IsLeaf())
-                    {
-                        delete p;
-                        Parent->Parent = NextChild;
-                        if (NextChild == Parent->Child1)
-                            NextChild->C = MinValue;
-                        else
-                        {
-                            NextChild->A = NextChild->B;
-                            NextChild->B = NextChild->C;
-                            NextChild->C = MinValue;
-                        }
-                        return Data;
-                    }
-                    else if (p->IsLeaf() && NextChild->IsLeaf())
-                    {
-                        Node<T> *Successor = Successor(p, Data);
-                        p->A = Successor->A;
-                        Parent = Successor->Parent;
-                    }
-
-                    else if (Parent == root)
-                    {
-                        root = Parent;
-                    }
-                }
-            }
+            Node->A = Successor->A;
         }
-        else if (p->ValueCount() == 2)
+        else if (Data == Node->B)
         {
-            if (p->A == Data)
-            {
-                p->A = p->B;
-                p->B = MinValue;
-            }
-            if (p->B == Data)
-                p->B = MinValue;
+            Node->B = Successor->A;
         }
+        else if (Data == Node->C)
+        {
+            Node->C = Successor->A;
+        }
+        LeafDelete(Successor,Data);
     }
     return Data;
 }
@@ -373,15 +329,29 @@ Node<T> *Tree<T>::Successor(Node<T> *p, T Data)
 }
 
 template <typename T>
-T Tree<T>::LeafDelete(T Data)
+T Tree<T>::LeafDelete(Node<T> *p,T Data)
 {
     T MinValue = static_cast<T>(INT32_MIN);
     Node<T> *Node, *Parent, *Sibling;
 
-    Node = Find(Data);
+    Node = p;
     Parent = Node->Parent;
     if (Parent == nullptr && Node == root)
     {
+        if (Node->ValueCount() == 1)
+        {
+            delete Node;
+            Node = nullptr;
+        }
+        else
+        {
+            if (Data == Node->A)
+            {
+                Node->A = Node->B;
+                Node->B = Node->C;
+                Node->C = MinValue;
+            }
+        }
     }
     else
     {
@@ -413,7 +383,6 @@ T Tree<T>::LeafDelete(T Data)
             else
                 Sibling = Parent->Child2;
         }
-  
     }
     if (Node->ValueCount() > 1)
     {
@@ -458,7 +427,7 @@ T Tree<T>::LeafDelete(T Data)
                     {
                         Sibling->C = MinValue;
                     }
-                    else if (Sibling == Parent->Child2 &&Node = Sibling->Child1)
+                    else if (Sibling == Parent->Child2 && Node == Sibling->Child1)
                     {
                         Sibling->A = Sibling->B;
                         Sibling->B = Sibling->C;
@@ -525,7 +494,7 @@ T Tree<T>::LeafDelete(T Data)
                     Parent->B = MinValue;
                     Parent->Child2 = Parent->Child3;
                     delete Parent->Child3;
-                        Parent->Child3 = nullptr;
+                    Parent->Child3 = nullptr;
                     return Data;
                 }
                 else if (Sibling == Parent->Child2)
@@ -570,7 +539,7 @@ T Tree<T>::LeafDelete(T Data)
             {
                 if (Sibling == Node->Child1)
                 {
-                    Node->A = Sibling->B;
+                    Node->A = Node->B;
                     if (Sibling->ValueCount() == 2)
                         Sibling->B = MinValue;
                     else
@@ -607,7 +576,19 @@ T Tree<T>::LeafDelete(T Data)
                 {
                     Node->A = Sibling->A;
                     Sibling->A = Sibling->B;
-                    if(Sibling->ValueCount() == 2)
+                    if (Sibling->ValueCount() == 2)
+                        Sibling->B = MinValue;
+                    else
+                    {
+                        Sibling->B = Sibling->C;
+                        Sibling->C = MinValue;
+                    }
+                }
+                else if (Sibling == Parent->Child4)
+                {
+                    Node->A = Sibling->A;
+                                  Sibling->A = Sibling->B;
+                    if (Sibling->ValueCount() == 2)
                         Sibling->B = MinValue;
                     else
                     {
