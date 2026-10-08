@@ -11,13 +11,10 @@ int main ()
     tree.Insert(70);
     tree.Insert(100);
     tree.Insert(55);
-    tree.Insert(45);
-    tree.Insert(75);
-    tree.Insert(32);
     tree.Display();
     std::cout<<"\n";
-    tree.Delete(55);
-    tree.Delete(40);
+    // tree.Delete(55);
+    tree.Delete(30);
     tree.Display();
     std::cout<<"\nEnd";
     return 0;
